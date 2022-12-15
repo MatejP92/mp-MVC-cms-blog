@@ -5,7 +5,7 @@ use app\core\Model;
 
 /**
 * The LoginModel class would represent the database models for the user.
-* They would be responsible for interacting with the database to create, read, update, and delete data.
+* They would be responsible for interacting with the database to Login the user.
 */
 
 class LoginModel extends Model {
@@ -14,29 +14,11 @@ class LoginModel extends Model {
    public string $password = "";
 
 
-
-   // register user method
-
-
-   // update user method
-
-
-   // delete user method
-
-
    // login method
 
     public function login() {
       echo "login in";
    }
-
-   //logout method
-
-
-   // is logged in method
-
-
-   // is admin method
 
 
    public function rules(): array {
@@ -45,6 +27,5 @@ class LoginModel extends Model {
           "password" => [self::RULE_REQUIRED],
       ];
   }
-
 
 }
