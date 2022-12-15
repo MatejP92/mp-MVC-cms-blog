@@ -17,7 +17,7 @@ class User extends Model {
     }
 
     
-    public static function prepare($sql){
+    public function prepare($sql){
         return Application::$app->db->pdo->prepare($sql);
     }
 
@@ -35,4 +35,12 @@ class User extends Model {
 
     // is admin method
 
+
+
+	/**
+	 * @return array
+	 */
+	public function rules(): array {
+		return parent::rules();
+	}
 }
