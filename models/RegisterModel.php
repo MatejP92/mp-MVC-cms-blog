@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+use app\core\Application;
 use app\core\Model;
 
 /**
@@ -28,9 +29,19 @@ class RegisterModel extends Model {
             "password" => $this->password,
             "repeatPassword" => $this->repeatPassword
         ];
-        echo "registering user";
+        $username = $data["username"];
+        $email = $data["email"];
+        $password = $data["password"];
 
+        // create registered user in database
 
+        $statement = self::prepare("INSERT INTO $tableName (username, email, password) VALUES ('$username', '$email', '$password')");
+        $statement->execute();
+        return true;
+    }
+
+    public static function prepare($sql){
+        return Application::$app->db->pdo->prepare($sql);
     }
 
 

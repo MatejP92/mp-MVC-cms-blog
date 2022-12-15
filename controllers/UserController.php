@@ -1,6 +1,8 @@
 <?php
 
 namespace app\controllers;
+
+use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
 use app\models\RegisterModel;
@@ -55,7 +57,8 @@ class UserController extends Controller {
         if($request->isPost()){
             $registerModel->loadData($request->getBody());            
             if($registerModel->validate() && $registerModel->registerUser()){ // add validation: if($registerModel->validate() && $registerModel->registerUser()) {...}
-                echo "successfull registration";
+                Application::$app->response->redirect("/");
+                return;
             }
             return $this->render("register", [
                 "model" => $registerModel
