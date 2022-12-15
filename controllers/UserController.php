@@ -3,7 +3,8 @@
 namespace app\controllers;
 use app\core\Controller;
 use app\core\Request;
-use app\models\User;
+use app\models\RegisterModel;
+use app\models\LoginModel;
 
 /** 
 *  The UserController class would handle
@@ -31,21 +32,38 @@ use app\models\User;
 class UserController extends Controller {
 
     public function login(Request $request){
-        $loginModel = new User();
+        $loginModel = new LoginModel();
         if($request->isPost()){
             $loginModel->loadData($request->getBody());
-            echo "<pre>";
-            var_dump($loginModel);
-            echo "</pre>";
-            exit;
+            if($loginModel->validate() && $loginModel->login()){
+                echo "successfull login";
+            }
+
+            return $this->render("login", [
+                "model" => $loginModel
+            ]);
+
         }
-        return $this->render("login");
+        return $this->render("login", [
+            "model" => $loginModel
+        ]);
     }
 
-    public function register(){
-        // if($request->isPost()){
-        //     // register the user
-        // }
-        return $this->render("register");
+
+    public function register(Request $request){
+        $registerModel = new RegisterModel();
+        if($request->isPost()){
+            $registerModel->loadData($request->getBody());            
+            if($registerModel->validate() && $registerModel->registerUser()){ // add validation: if($registerModel->validate() && $registerModel->registerUser()) {...}
+                echo "successfull registration";
+            }
+            return $this->render("register", [
+                "model" => $registerModel
+            ]);
+            // register the user
+        }
+        return $this->render("register", [
+            "model" => $registerModel
+        ]);
     }
 }
