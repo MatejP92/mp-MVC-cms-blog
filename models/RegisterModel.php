@@ -16,39 +16,49 @@ class RegisterModel extends Model {
     public string $password = "";
     public string $repeatPassword = "";
 
-    public function tableName($tableName): string {
-        return $tableName;
+    protected function tableName(): string {
+        return "users";
     }
  
     // register user method
     public function registerUser(){
-        $tableName = $this->tableName("users");
+        $this->password = password_hash($this->password, PASSWORD_DEFAULT);
+        $tableName = $this->tableName();
         $data = [
             "username" => $this->username,
             "email" => $this->email,
             "password" => $this->password,
             "repeatPassword" => $this->repeatPassword
         ];
-        $username = $data["username"];
-        $email = $data["email"];
-        $password = $data["password"];
+        $attributes = $this->attributes();
+        $data = array_map(fn($attr) => ":$attr", $attributes);
+        $statement = self::prepare("INSERT INTO $tableName (".implode(',', $attributes).") VALUES (".implode(',', $data).")");
+        foreach ($attributes as $attribute){
+            $statement->bindValue(":$attribute", $this->{$attribute});
+        }
 
-        // create registered user in database
-
-        $statement = self::prepare("INSERT INTO $tableName (username, email, password) VALUES ('$username', '$email', '$password')");
         $statement->execute();
         return true;
+
     }
 
-    public static function prepare($sql){
+    public function prepare($sql){
         return Application::$app->db->pdo->prepare($sql);
     }
 
+    public function attributes(): array {
+        return [
+            "username",
+            "email",
+            "password",
+        ];
+        
+	}
 
     public function rules(): array {
         return [
-            "username" => [self::RULE_REQUIRED],
-            "email" => [self::RULE_REQUIRED, self::RULE_EMAIL],
+            "username" => [self::RULE_REQUIRED, [self::RULE_UNIQUE, "class" => self::class]],
+            "email" => [self::RULE_REQUIRED, self::RULE_EMAIL, [self::RULE_UNIQUE, "class" => self::class],],
             "password" => [self::RULE_REQUIRED, [self::RULE_MIN, "min" => 8]],
             "repeatPassword" => [self::RULE_REQUIRED, [self::RULE_MATCH, "match" => "password"]]
         ];
