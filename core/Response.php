@@ -15,4 +15,8 @@ namespace app\core;
         http_response_code($code);  // this function sets the status code to whatever you want it to be (200-OK, 404-not found,...)
     }
 
+    public function redirect(string $url){
+        header('Location: '. $url);
+    }
+
  }
