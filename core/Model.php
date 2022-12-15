@@ -2,6 +2,7 @@
 
 namespace app\core;
 
+
 /**
 * class Model
 * 
@@ -11,6 +12,26 @@ namespace app\core;
 
 abstract class Model {
 
+        /**
+     * Validation rule that specifies a value is required
+     */
+    public const RULE_REQUIRED = 'required';
+
+    /**
+     * Validation rule that specifies a value must be a valid email address
+     */
+    public const RULE_EMAIL = 'email';
+
+    /**
+     * Validation rule that specifies a minimum length for a value
+     */
+    public const RULE_MIN = 'min';
+
+    /**
+     * Validation rule that specifies a value must match some other value
+     */
+    public const RULE_MATCH = 'match';
+
 
     public function loadData($data) {
         foreach ($data as $key => $value) {
@@ -18,5 +39,61 @@ abstract class Model {
                 $this->{$key} = $value;
             }
         }
+    }
+
+    abstract public function rules(): array;
+    public array $errors = []; // this array will gather all the errors
+
+    public function validate(){
+        // this method validates the inputed data
+
+        foreach ($this->rules() as $attribute => $rules) {
+            $value = $this->{$attribute};
+            foreach($rules as $rule){
+                $ruleName = $rule;
+                if(!is_string($ruleName)){
+                    $ruleName = $rule[0];
+                }
+                if($ruleName === self::RULE_REQUIRED && !$value){ // if rulename is equal to required and the value doesn't exist, this means that there is a validation error of required
+                    $this->addError($attribute, self::RULE_REQUIRED);
+                }
+                if($ruleName === self::RULE_EMAIL && !filter_var($value, FILTER_VALIDATE_EMAIL)){
+                    $this->addError($attribute, self::RULE_EMAIL);
+                }
+                if ($ruleName === self::RULE_MIN and strlen($value) < $rule["min"]) {
+                    $this->addError($attribute, self::RULE_MIN, $rule);
+                }
+                if ($ruleName === self::RULE_MATCH and $value !== $this->{$rule["match"]}) {
+                    $this->addError($attribute, self::RULE_MATCH, $rule);
+                }
+            }
+        }
+
+        return empty($this->errors);
+    }
+
+    public function addError(string $attribute, string $rule, $params = []) {
+        $message = $this->errorMessages()[$rule] ?? "";
+        foreach ($params as $key => $value) {
+            $message = str_replace("{{$key}}", $value, $message);
+        }
+        $this->errors[$attribute][] = $message;
+    }
+
+    public function errorMessages() {
+        return [
+            self::RULE_REQUIRED => 'This field is required',
+            self::RULE_EMAIL    => 'This field must be a valid email address',
+            self::RULE_MIN      => 'Minimum length of the password must be at least {min} characters',
+            self::RULE_MATCH    => 'Passwords do not match'
+        ];
+    }
+
+    public function hasError($attribute){
+        return $this->errors[$attribute] ?? false;
+    }
+
+    public function getFirstError ($attribute) {
+        return $this->errors[$attribute][0] ?? false;
     }
 }
