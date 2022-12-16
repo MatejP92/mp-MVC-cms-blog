@@ -23,4 +23,7 @@ class Database {
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION); // if there is some problem regarding the database, throw the exception
     }
 
+    public function prepare($sql){
+        return $this->pdo->prepare($sql);
+    }
 }
