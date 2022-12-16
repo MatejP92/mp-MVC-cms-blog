@@ -5,7 +5,8 @@ namespace app\controllers;
 use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
-use app\models\RegisterModel;
+use app\core\Response;
+use app\models\User;
 use app\models\LoginModel;
 
 /** 
@@ -33,18 +34,14 @@ use app\models\LoginModel;
 
 class UserController extends Controller {
 
-    public function login(Request $request){
+    public function login(Request $request, Response $response){
         $loginModel = new LoginModel();
         if($request->isPost()){
             $loginModel->loadData($request->getBody());
             if($loginModel->validate() && $loginModel->login()){
-                echo "successfull login";
+                $response->redirect("/");
+                return;
             }
-
-            return $this->render("login", [
-                "model" => $loginModel
-            ]);
-
         }
         return $this->render("login", [
             "model" => $loginModel
@@ -53,20 +50,23 @@ class UserController extends Controller {
 
 
     public function register(Request $request){
-        $registerModel = new RegisterModel();
+        $registerModel = new User();
         if($request->isPost()){
             $registerModel->loadData($request->getBody());            
-            if($registerModel->validate() && $registerModel->registerUser()){ // add validation: if($registerModel->validate() && $registerModel->registerUser()) {...}
+            if($registerModel->validate() && $registerModel->save()){ // add validation: if($registerModel->validate() && $registerModel->registerUser()) {...}
+                Application::$app->session->setFlash("success", "Thanks for registering");
                 Application::$app->response->redirect("/");
                 return;
             }
-            return $this->render("register", [
-                "model" => $registerModel
-            ]);
             // register the user
         }
         return $this->render("register", [
             "model" => $registerModel
         ]);
+    }
+
+    public function logout(Request $request, Response $response) {
+        Application::$app->logout();
+        $response->redirect("/");
     }
 }
