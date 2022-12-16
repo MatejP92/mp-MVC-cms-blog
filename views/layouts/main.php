@@ -1,3 +1,5 @@
+<?php use app\core\Application; ?>
+
 <!-- HEADER START -->
 <!DOCTYPE html>
 <html lang="en">
@@ -17,11 +19,16 @@
 <!-- HEADER END -->
 
 <!-- NAVBAR START -->
-   <?php include_once 'shared/navbar.php' ?>
+   <?php include_once "shared/navbar.php" ?>
 <!-- NAVBAR END -->
 
 <!-- PLACEHOLDER -->
 <div class="container">
+    <?php if(Application::$app->session->getFlash("success")): ?>
+    <div class="alert alert-success">
+        <?php echo Application::$app->session->getFlash("success") ?>
+    </div>
+    <?php endif; ?>
     {{content}}
 </div>
 <!----------------->
