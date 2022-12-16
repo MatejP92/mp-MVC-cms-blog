@@ -16,6 +16,7 @@ $dotenv->load();
 $rootPath = __DIR__;
 
 $config = [
+    "userClass" => \app\models\User::class,
     "db" => [
         "dsn" => $_ENV["DB_DSN"],
         "user" => $_ENV["DB_USER"],
@@ -33,5 +34,7 @@ $app->router->post("/login", [UserController::class, "login"]);
 
 $app->router->get("/register", [UserController::class, "register"]);
 $app->router->post("/register", [UserController::class, "register"]);
+
+$app->router->get("/logout", [UserController::class, "logout"]);
 
 $app->run();
