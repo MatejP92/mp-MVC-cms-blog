@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="mx-auto form-floating mb-3 mt-3 col-4">
-                <input type="password" class="form-control <?php echo $model->hasError('password') ? 'is-invalid' : '' ?>" name="repeatPassword" id="repeatPassword" placeholder="RepeatPassword...">
+                <input type="password" class="form-control <?php echo $model->hasError('repeatPassword') ? 'is-invalid' : '' ?>" name="repeatPassword" id="repeatPassword" placeholder="RepeatPassword...">
                 <label for="repeatPassword">Repeat Password...</label>
                 <div class="invalid-feedback">
                     <?php echo $model->getFirstError("repeatPassword") ?>
