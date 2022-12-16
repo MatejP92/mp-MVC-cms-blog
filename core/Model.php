@@ -35,6 +35,10 @@ abstract class Model {
     * Validation rule that specifies a value must not already exist
     */
     public const RULE_UNIQUE = "unique";
+    /**
+    * Validation rule that prevents the use of special characters
+    */
+    const RULE_NO_SPECIAL_CHARS = "no_special_chars";
 
     public function loadData($data) {
         foreach ($data as $key => $value) {
@@ -66,22 +70,26 @@ abstract class Model {
                     $ruleName = $rule[0];
                 }
                 if($ruleName === self::RULE_REQUIRED && !$value){ // if rulename is equal to required and the value doesn't exist, this means that there is a validation error of required
-                    $this->addError($attribute, self::RULE_REQUIRED);
+                    $this->addErrorForRule($attribute, self::RULE_REQUIRED);
                 }
                 if($ruleName === self::RULE_EMAIL && !filter_var($value, FILTER_VALIDATE_EMAIL)){
-                    $this->addError($attribute, self::RULE_EMAIL);
+                    $this->addErrorForRule($attribute, self::RULE_EMAIL);
                 }
-                if($ruleName === self::RULE_MIN and strlen($value) < $rule["min"]) {
-                    $this->addError($attribute, self::RULE_MIN, $rule);
+                if($ruleName === self::RULE_MIN && strlen($value) < $rule["min"]){
+                    $this->addErrorForRule($attribute, self::RULE_MIN, $rule);
                 }
-                if($ruleName === self::RULE_MATCH and $value !== $this->{$rule["match"]}) {
-                    $this->addError($attribute, self::RULE_MATCH, $rule);
+                if($ruleName === self::RULE_MATCH && $value !== $this->{$rule["match"]}){
+                    $rule["match"] = $this->getLabel($rule["match"]);
+                    $this->addErrorForRule($attribute, self::RULE_MATCH, $rule);
+                }
+                if($ruleName === self::RULE_NO_SPECIAL_CHARS && preg_match('/[^A-Za-z0-9]/', $value)){
+                    $this->addErrorForRule($attribute, self::RULE_NO_SPECIAL_CHARS);
                 }
                 if($ruleName === self::RULE_UNIQUE){
                     $className = $rule["class"];
                     $uniqueAttr = $rule["attribute"] ?? $attribute;
                     $tableName = $className::tableName();
-                    $statement = self::prepare("SELECT * FROM $tableName WHERE $uniqueAttr=:attr");
+                    $statement = Application::$app->db->prepare("SELECT * FROM $tableName WHERE $uniqueAttr=:attr");
                     $statement->bindValue(":attr", $value);
                     $statement->execute();
                     $record = $statement->fetchObject();
@@ -91,12 +99,7 @@ abstract class Model {
                 }
             }
         }
-
         return empty($this->errors);
-    }
-
-    public function prepare($sql){
-        return Application::$app->db->pdo->prepare($sql);
     }
 
     private function addErrorForRule(string $attribute, string $rule, $params = []){
@@ -107,11 +110,7 @@ abstract class Model {
         }
         $this->errors[$attribute][] = $message;
     }
-    public function addError(string $attribute, string $rule, $params = []) {
-        $message = $this->errorMessages()[$rule] ?? "";
-        foreach ($params as $key => $value) {
-            $message = str_replace("{{$key}}", $value, $message);
-        }
+    public function addError(string $attribute, string $message){ // this method takes only 2 arguments that will add the message inside the errors for that attribute
         $this->errors[$attribute][] = $message;
     }
 
@@ -120,8 +119,9 @@ abstract class Model {
             self::RULE_REQUIRED => "This field is required",
             self::RULE_EMAIL    => "This field must be a valid email address",
             self::RULE_MIN      => "Minimum length of the password must be at least {min} characters",
-            self::RULE_MATCH    => "Passwords do not match",
-            self::RULE_UNIQUE   => "{field} already exists",
+            self::RULE_MATCH    => "This field must be the same as {match}",
+            self::RULE_UNIQUE   => "Record with this {field} already exists",
+            self::RULE_NO_SPECIAL_CHARS  => "No special characters are allowed"
         ];
     }
 
@@ -132,4 +132,6 @@ abstract class Model {
     public function getFirstError ($attribute) {
         return $this->errors[$attribute][0] ?? false;
     }
+
+
 }
