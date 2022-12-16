@@ -55,7 +55,7 @@ namespace app\core;
             $callback[0] = Application::$app->controller;
         }
 
-        return call_user_func($callback, $this->request); // this function executes the callback and it will return the string
+        return call_user_func($callback, $this->request, $this->response); // this function executes the callback and it will return the string
     }
 
 
