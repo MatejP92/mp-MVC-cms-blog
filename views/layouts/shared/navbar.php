@@ -1,3 +1,5 @@
+<?php use app\core\Application; ?>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">Matej's Blog Page</a>
@@ -14,12 +16,24 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
-                    <li class="nav-item mx-1">
-                        <a class="nav-link" href="/login">Login</a>
-                    </li>
-                    <li class="nav-item mx-1">
-                        <a class="nav-link" href="/register">Register</a>
-                    </li>
+                    <?php  if(Application::isGuest()): ?>
+                        <li class="nav-item mx-1">
+                            <a class="nav-link" href="/login">Login</a>
+                        </li>
+                        <li class="nav-item mx-1">
+                            <a class="nav-link" href="/register">Register</a>
+                        </li>
+                    <?php else: ?>
+                        <li class="nav-item mx-1">
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"><?php echo Application::$app->user->getDisplayName() ?></a>
+                        </li>
+                        <li class="nav-item mx-1">
+                            <a class="nav-link" href="/profile">Profile</a>
+                        </li>
+                        <li class="nav-item mx-1">
+                            <a class="nav-link" href="/logout">Logout</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
