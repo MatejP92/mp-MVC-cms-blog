@@ -12,6 +12,8 @@ namespace app\core;
 
 class View {
 
+    public string $title = "";
+
     /**
      * Summary of renderView
      * This method renders the page that from the given path
@@ -19,9 +21,8 @@ class View {
      * like login.php, register.php, ...
      */
     public function renderView($view, $params =[]){
-
-        $layoutContent = $this->layoutContent();
         $viewContent = $this->RenderOnlyView($view, $params);
+        $layoutContent = $this->layoutContent();
         return str_replace("{{content}}", $viewContent, $layoutContent);
     }
 
@@ -36,7 +37,10 @@ class View {
      * This method sets the basic html tags and layout in main.php so the {{content}} can be rendered
      */
     protected function layoutContent(){
-        $layout = Application::$app->controller->layout;
+        $layout = Application::$app->layout;
+        if(Application::$app->controller){
+            $layout = Application::$app->controller->layout;
+        }
         ob_start();      // this function starts the output caching
         include_once Application::$ROOT_DIR . "/../views/layouts/$layout.php";
         return ob_get_clean(); // this function returns the value as a string, what is already buffered and clears the buffer
