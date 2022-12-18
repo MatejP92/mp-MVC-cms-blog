@@ -63,13 +63,13 @@ class User extends DatabaseModel {
     // delete user method
 
 
-    //logout method
-
-
     // is logged in method
 
 
     // is admin method
+
+
+    // is content creator
 
 
 	public function getDisplayName(): string {
