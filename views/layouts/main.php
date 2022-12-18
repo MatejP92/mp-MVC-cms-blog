@@ -1,4 +1,5 @@
 <?php use app\core\Application; ?>
+<?php /** @var $this \app\core\View */ ?>
 
 <!-- HEADER START -->
 <!DOCTYPE html>

@@ -17,7 +17,7 @@
 <!-- HEADER END -->
 
 <!-- NAVBAR START -->
-   <?php include_once 'shared/navbar.php' ?>
+   <?php include_once 'shared/admin_navbar.php' ?>
 <!-- NAVBAR END -->
 
 <!-- PLACEHOLDER -->
