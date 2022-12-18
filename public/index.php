@@ -2,6 +2,7 @@
 use app\core\Application;
 use app\controllers\SiteController;
 use app\controllers\UserController;
+use app\controllers\AdminController;
 
 /**
 * The public/index.php file would be the entry point for the application. It would initialize 
@@ -38,5 +39,7 @@ $app->router->get("/register", [UserController::class, "register"]);
 $app->router->post("/register", [UserController::class, "register"]);
 
 $app->router->get("/logout", [UserController::class, "logout"]);
+
+$app->router->get("/admin", [AdminController::class, "admin"]);
 
 $app->run();
