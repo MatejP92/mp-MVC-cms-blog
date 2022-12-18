@@ -1,3 +1,8 @@
+<?php 
+/** @var $this \app\core\View */
+$this->title = " - Register"; 
+?>
+
 <div class="col">
     <h2 class="text-center">Register</h2>
     <div class="container">

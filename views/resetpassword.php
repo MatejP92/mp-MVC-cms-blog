@@ -1,3 +1,8 @@
+<?php 
+/** @var $this \app\core\View */
+$this->title = " - Reset Password"; 
+?>
+
 <div class="col">
     <h2 class="text-center">New Password</h2>
     <div class="container">

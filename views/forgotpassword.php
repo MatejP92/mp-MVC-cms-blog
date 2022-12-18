@@ -1,3 +1,8 @@
+<?php 
+/** @var $this \app\core\View */
+$this->title = " - Forgot Password"; 
+?>
+
 <div class="col">
     <h2 class="text-center">Reset password</h2>
     <p class="text-center">An email with the password reset link will be sent to your email if it exists</p>

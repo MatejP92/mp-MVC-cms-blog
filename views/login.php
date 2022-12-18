@@ -1,3 +1,8 @@
+<?php 
+/** @var $this \app\core\View */
+$this->title = " - Login"; 
+?>
+
 <div class="col">
     <h2 class="text-center">Login</h2>
         <div class="container">
