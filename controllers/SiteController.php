@@ -1,6 +1,8 @@
 <?php
 
 namespace app\controllers;
+
+use app\core\Application;
 use app\core\Controller;
 
 /**
@@ -17,9 +19,15 @@ use app\core\Controller;
 class SiteController extends Controller {
     
     public function home(){
-        $params = [
-            "name" => "Guest"
-        ];
+        if(Application::isGuest()){
+            $params = [
+                "name" => "Guest"
+            ];
+        } else {
+            $params = [
+                "name" => Application::$app->user->getDisplayName()
+            ];
+        }
         return $this->render("home", $params);  // this replaces the Application::$app->router->renderView("home", $params); 
         // render method is created in Controller class in core folder
     }
