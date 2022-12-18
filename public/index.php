@@ -29,6 +29,8 @@ $app = new Application(__DIR__, $config);
 $app->router->get("/", [SiteController::class, "home"]);
 $app->router->get("/posts", [SiteController::class, "posts"]);
 
+$app->router->get("/profile", [UserController::class, "profile"]);
+
 $app->router->get("/login", [UserController::class, "login"]);
 $app->router->post("/login", [UserController::class, "login"]);
 
