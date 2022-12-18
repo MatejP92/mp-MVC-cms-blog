@@ -1,1 +1,0 @@
-<h2 class="text-center">Not found</h2>

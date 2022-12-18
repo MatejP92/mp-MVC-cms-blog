@@ -20,9 +20,9 @@ class Application {
     public Database $db;
     public ?DatabaseModel $user; // ? means that if the user is guest, this value is null
     public View $view;   
-
+    public string $layout = "main";
     public static Application $app;
-    public Controller $controller;
+    public ?Controller $controller = null;
 
     public function __construct($rootPath, array $config) {
         $this->userClass = $config["userClass"];
@@ -32,6 +32,7 @@ class Application {
         $this->response = new Response();
         $this->session = new Session();
         $this->router = new Router($this->request, $this->response);
+        $this->view = new View();
 
         $this->db = new Database($config["db"]);
         
@@ -42,12 +43,19 @@ class Application {
         } else {
             $this->user = null;
         }
-
-        $this->view = new View();
     }
   
     public function run() {
-        echo $this->router->resolve();
+        try{
+            echo $this->router->resolve();
+        } catch (\Exception $e){
+            $this->response->setStatusCode($e->getCode());      // this sets the status code to whatever code it is, so that it matches the error
+            echo $this->view->renderView("_error", [
+                "exception" => $e
+            ]);
+        }
+
+
     }
 
         /**
