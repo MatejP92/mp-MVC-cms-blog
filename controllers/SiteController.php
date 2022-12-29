@@ -35,4 +35,6 @@ class SiteController extends Controller {
     public function posts(){
         return $this->render("posts");
     }
+
+
 }

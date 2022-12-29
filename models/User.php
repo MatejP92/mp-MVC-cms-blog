@@ -66,13 +66,18 @@ class User extends DatabaseModel {
     // is logged in method
 
 
-    // is admin method
-
-
-    // is content creator
+    // get user role method
+    public function getUserRole($username): string {
+        // Retrieve the user's role from the database using the findUser() method
+        $user = User::findUser(["username" => "$username"]);
+        return $user->role;
+    }
 
 
 	public function getDisplayName(): string {
         return $this->username;
 	}
+
+    
+
 }

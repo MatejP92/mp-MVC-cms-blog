@@ -9,8 +9,8 @@ $this->title = " - Forgot Password";
         <div class="container">
             <form action="" method="post">
                 <div class="mx-auto form-floating mb-3 mt-3 col-4">
-                    <input type="text" class="form-control" name="username" id="username" placeholder="Username/Email...">
-                    <label for="username">Username/Email...</label>
+                    <input type="text" class="form-control" name="email" id="email" placeholder="Email...">
+                    <label for="email">Email...</label>
                 </div>
                 <div class="mx-auto d-grid">
                     <button type="submit" class="mx-auto btn btn-dark col-2" name="submit" id="submit">Send</button>

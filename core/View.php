@@ -57,7 +57,12 @@ class View {
         }
         //** Whenever we include the $view file, the include will see the above variables */
         ob_start();      // this function starts the output caching
-        include_once Application::$ROOT_DIR . "/../views/$view.php";
+        if(file_exists(Application::$ROOT_DIR . "/../views/$view.php.")){
+            include_once Application::$ROOT_DIR . "/../views/$view.php";
+        } elseif (file_exists(Application::$ROOT_DIR . "/../views/admin/$view.php")){
+            include_once Application::$ROOT_DIR . "/../views/admin/$view.php";
+        }
+ 
         return ob_get_clean(); // this function returns the value as a string, what is already buffered and clears the buffer
     }
 }

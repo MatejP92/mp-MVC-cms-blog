@@ -45,6 +45,9 @@ namespace app\core;
         return $this->method() === "post";   // If the method is post we return true
     }
 
+    public function getQueryParameter($pathQuery){
+        return $_GET["$pathQuery"];
+    }
 
     public function getBody() {
         $body = [];

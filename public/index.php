@@ -1,8 +1,11 @@
 <?php
+
+use app\controller\ResetPasswordController;
 use app\core\Application;
 use app\controllers\SiteController;
 use app\controllers\UserController;
 use app\controllers\AdminController;
+use app\controllers\ContentCreatorController;
 
 /**
 * The public/index.php file would be the entry point for the application. It would initialize 
@@ -26,6 +29,7 @@ $config = [
 ];
 
 $app = new Application(__DIR__, $config);
+$userRole = "guest";
 
 $app->router->get("/", [SiteController::class, "home"]);
 $app->router->get("/posts", [SiteController::class, "posts"]);
@@ -40,6 +44,19 @@ $app->router->post("/register", [UserController::class, "register"]);
 
 $app->router->get("/logout", [UserController::class, "logout"]);
 
+
 $app->router->get("/admin", [AdminController::class, "admin"]);
+$app->router->get("/admin/view_posts", [AdminController::class, "viewPosts"]);
+$app->router->get("/admin/new_post", [AdminController::class, "newPost"]);
+$app->router->post("/admin/new_post", [AdminController::class, "newPost"]);
+$app->router->get("/admin/view_users", [AdminController::class, "viewUsers"]);
+$app->router->get("/admin/new_user", [AdminController::class, "newUser"]);
+$app->router->get("/admin/comments", [AdminController::class, "comments"]);
+
+
+$app->router->get("/forgotpassword", [UserController::class, "forgotPassword"]);
+$app->router->post("/forgotpassword", [UserController::class, "forgotPassword"]);
+
+$app->router->get("/resetpassword", [ResetPasswordController::class, "resetpassword"]);
 
 $app->run();

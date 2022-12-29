@@ -90,4 +90,11 @@ class Application {
     public static function isGuest(){
         return !self::$app->user;
     }
+
+    public function UserRole() {
+        $userModel = new \app\models\User();
+        $userRole = $userModel->getUserRole(Application::$app->user->getDisplayName());
+        return $userRole;
+    }
+
 }

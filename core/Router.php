@@ -55,7 +55,17 @@ use app\core\exception\NotFoundException;
             /**
             * @var \app\core\Controller $controller
             */
-            $controller = new $callback[0](); // we create a new instance of the callback and we take from the callback the first element, which is the Controller name and create a new instance of the Controller with a new keyword
+            if(Application::$app->isGuest()){
+                $userRole = "guest";
+                $controller = new $callback[0]($userRole);
+            } else {
+                $userModel = new \app\models\User();
+            
+                $userRole = $userModel->getUserRole(Application::$app->user->getDisplayName());
+                $controller = new $callback[0]($userRole);
+            }
+            //$userRole = "admin"; // get the user role from logged in user
+            //$controller = new $callback[0]($userRole); // we create a new instance of the callback and we take from the callback the first element, which is the Controller name and create a new instance of the Controller with a new keyword
             Application::$app->controller = $controller;
             $controller->action = $callback[1]; // index 1 is the action, in index.php we have [userController::class, "profile"] : profile is on index 1 and this is the action
             $callback[0] = $controller;

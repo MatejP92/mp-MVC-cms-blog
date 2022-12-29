@@ -82,5 +82,8 @@ class UserController extends Controller {
     }
 
 
+    public function forgotPassword(){
+        return $this->render("forgotpassword");
+    }
 
 }

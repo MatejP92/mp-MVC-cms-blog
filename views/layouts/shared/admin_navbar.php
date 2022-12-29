@@ -1,56 +1,62 @@
-<nav class="navbar navbar-expand navbar-dark bg-dark justify-content-between">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Home</a>
-        <div class="navbar-nav">
-            <a class="nav-item nav-link" href="#">Profile</a>
-            <a class="nav-item nav-link" href="#">Logout</a>
-        </div>
-    </div>
-</nav>
+<?php use app\core\Application; ?>
 
-
-
-
-
-<nav class="navbar navbar-dark bg-dark flex-column flex-md-row navbar-expand-md navbar-expand-lg navbar-expand-xl navbar-expand navbar-fixed-side">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Dashboard</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Posts
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">View All Posts</a>
-                        <a class="dropdown-item" href="#">Create Post</a>
-                    </div>
-                </li>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <?php if(Application::$app->UserRole() == "admin"): ?>
+                <a class="navbar-brand" href="/admin">Admin Dashboard</a>
+            <?php else: ?>
+                <a class="navbar-brand" href="/admin">Content Creator Dashboard</a>
+            <?php endif; ?>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse mx-4" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Comments</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Users
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">View All Users</a>
-                        <a class="dropdown-item" href="#">Add User</a>
-                    </div>
-                </li>
-            </ul>
+                        <a class="nav-link" href="/admin">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Main page</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Posts
+                        </a>                
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <?php if(Application::$app->UserRole() == "admin"): ?>
+                            <li><a class="dropdown-item" href="/admin/view_posts">View All Posts</a></li>
+                        <?php elseif(Application::$app->UserRole() == "subscriber"): ?>
+                            <li><a class="dropdown-item" href="/admin/view_posts">View Your Posts</a></li>
+                        <?php endif; ?>
+                            <li><a class="dropdown-item" href="/admin/new_post">Create Post</a></li>
+                        </ul>
+                    </li>
+                    <?php if(Application::$app->UserRole() == "admin"): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/comments">Comments</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Users
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/admin/view_users">View All Users</a></li>
+                            <li><a class="dropdown-item" href="/admin/new_user">Create User</a></li>
+                        </ul>
+                    </li>
+                    <?php endif; ?>
+                </ul>
+                <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+                        <li class="nav-item mx-1">
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"><?php echo Application::$app->user->getDisplayName() ?></a>
+                        </li>
+                        <li class="nav-item mx-1">
+                            <a class="nav-link" href="/profile">Profile</a>
+                        </li>
+                        <li class="nav-item mx-1">
+                            <a class="nav-link" href="/logout">Logout</a>
+                        </li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
-
-
-
-<nav class="nav flex-column">
-  <a class="nav-link active" aria-current="page" href="#">Active</a>
-  <a class="nav-link" href="#">Link</a>
-  <a class="nav-link" href="#">Link</a>
-  <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-</nav>
+    </nav>
