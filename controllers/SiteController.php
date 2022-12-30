@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\core\Application;
 use app\core\Controller;
+use app\models\Blog;
 
 /**
 * class SiteController
@@ -20,20 +21,21 @@ class SiteController extends Controller {
     
     public function home(){
         if(Application::isGuest()){
-            $params = [
-                "name" => "Guest"
-            ];
+            $posts = [];
         } else {
-            $params = [
-                "name" => Application::$app->user->getDisplayName()
-            ];
+            $posts = Blog::FindUserPosts(Application::$app->user->getDisplayName());
         }
-        return $this->render("home", $params);  // this replaces the Application::$app->router->renderView("home", $params); 
+        return $this->render("home", [
+            "posts" => $posts
+        ]);  // this replaces the Application::$app->router->renderView("home", $params); 
         // render method is created in Controller class in core folder
     }
 
     public function posts(){
-        return $this->render("posts");
+        $posts = Blog::FindAllPosts();
+        return $this->render("posts", [
+            "posts" => $posts
+        ]);
     }
 
 
