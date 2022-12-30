@@ -12,14 +12,24 @@ use app\core\DatabaseModel;
 class Blog extends DatabaseModel {
     public string $title = "";
     public string $author = "";
-    public string $status = "";
     public string $content = "";
+    public string $created;
+    public string $status = "";
+
+    public function __construct($title, $author, $content, $created, $status){
+        $this->title = $title;
+        $this->author = $author;
+        $this->content = $content;
+        $this->created = $created;
+        $this->status = $status;
+    }
+
 
     public static function tableName(): string {
         return "posts";
     }
     
-    // Database connection
+
 
 
     // Table columns
@@ -35,12 +45,34 @@ class Blog extends DatabaseModel {
             "author" => $this->author,
             "content" => $this->content,
             "status" => $this->status,
+            "created" => $this->created
         ];
         return parent::save();
     }
 
     // Get all blog posts
+    public function GetAllPosts() {
+        $posts = Blog::FindAllPosts();
+        return $posts;
+    }
 
+    // Display posts from a user
+    public function GetUserPosts() {
+        $posts = Blog::FindUserPosts(Application::$app->user->getDisplayName());
+        return $posts;
+    }
+
+    // Get all published posts
+    public function GetAllPublishedPosts() {
+        $posts = Blog::FindAllPublishedPosts();
+        return $posts;
+    }
+
+    // Get all published posts from user
+    public function GetUserPublishedPosts() {
+        $posts = Blog::FindUserPublishedPosts(Application::$app->user->getDisplayName());
+        return $posts;
+    }
 
     // getById method
 
@@ -59,6 +91,7 @@ class Blog extends DatabaseModel {
             "author",
             "content",
             "status",
+            //"created"
         ];
     }
 
