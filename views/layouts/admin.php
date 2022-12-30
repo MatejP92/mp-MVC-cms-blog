@@ -1,3 +1,4 @@
+<?php use app\core\Application; ?>
 <?php /** @var $this \app\core\View */ ?>
 <!-- HEADER START -->
 <!DOCTYPE html>
@@ -23,6 +24,11 @@
 
 <!-- PLACEHOLDER -->
 <div class="container">
+    <?php if(Application::$app->session->getFlash("success")): ?>
+    <div class="alert alert-success">
+        <?php echo Application::$app->session->getFlash("success") ?>
+    </div>
+    <?php endif; ?>
     {{content}}
 </div>
 <!----------------->
