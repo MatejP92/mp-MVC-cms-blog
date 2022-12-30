@@ -44,18 +44,23 @@ class AdminController extends Controller {
         }
     }
 
-    public function savePost(Request $request){
-        $postModel = new Blog();
+    public function newPost(Request $request){
+        $title = isset($request->getBody()['title']) ?? "";
+        $author = isset($request->getBody()['author']) ?? "";
+        $content = isset($request->getBody()['content']) ?? "";
+        $status = isset($request->getBody()['status']) ?? "";
+        $created = "";
+        $postModel = new Blog($title, $author, $content, $status, $created);
+
         if($request->isPost()) {
             $postModel->loadData($request->getBody());
             if($postModel->validate() && $postModel->save()) {
-                Application::$app->session->setFlash("success", "Your post has been saved");
+                Application::$app->session->setFlash("success", "Your post has been saved, you can view your post <a href='#'>HERE</a> or you can view <a href='/admin/view_posts'>ALL POSTS</a>.");
                 Application::$app->response->redirect("/admin");
                 return;
             }
             // save the post
         }
-        $this->setLayout("admin");
         return $this->render("/new_post",
             ["model" => $postModel
         ]);
@@ -69,14 +74,14 @@ class AdminController extends Controller {
     }
 
     public function ViewPosts(){
+        $posts = Blog::FindUserPosts(Application::$app->user->getDisplayName());
         $this->setLayout("admin");
-        return $this->render("/view_posts");
+        return $this->render("/view_posts", [
+            "posts" => $posts
+        ]);
     }
 
-    public function newPost(){
-        $this->setLayout("admin");
-        return $this->render("/new_post");
-    }
+
 
     public function viewUsers(){
         $this->setLayout("admin");
