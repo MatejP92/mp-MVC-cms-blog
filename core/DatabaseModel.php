@@ -1,6 +1,7 @@
 <?php
 
 namespace app\core;
+use app\models\Blog;
 use app\models\User;
 
 /**
@@ -29,17 +30,6 @@ abstract class DatabaseModel extends Model{
         return true;
     }
 
-    // public function savePost(){
-    //     $tableName = "posts";
-    //     $attributes = $this->attributes();
-    //     $data = array_map(fn($attr) => ":$attr", $attributes);
-    //     $stmt = Application::$app->db->prepare("INSERT INTO $tableName (title, author, content, status) VALUES (".implode(',', $data).")");
-    //     foreach ($attributes as $attribute){
-    //         $stmt->bindValue(":$attribute", $this->{$attribute});
-    //     }
-    //     $stmt->execute();
-    //     return true;
-    // }
 
     static public function findUser($where){ // [username => <database username>,]...
         $tableName = static::tableName();
@@ -53,10 +43,65 @@ abstract class DatabaseModel extends Model{
         return $statement->fetchObject(static::class);
     }
 
+
+    
+    
+    static public function FindAllPosts() {
+        $posts = [];
+        $tableName = static::tableName();
+        $statement = self::prepare("SELECT * FROM $tableName ORDER BY id DESC");
+        $statement->execute();
+        $rows = $statement->fetchAll();
+        foreach($rows as $row) {
+            $posts[] = new Blog($row["title"], $row["author"], substr($row["content"], 0, 300), $row["created"], $row["status"]);
+        }
+        return $posts;
+    }
+   
+    static public function findAllPublishedPosts(){
+        $posts = [];
+        $tableName = static::tableName();
+        $statement = self::prepare("SELECT * FROM $tableName WHERE status = published ORDER BY id DESC");
+        $statement->execute();
+        $rows = $statement->fetchAll();
+        foreach($rows as $row) {
+            $posts[] = new Blog($row["title"], $row["author"], substr($row["content"], 0, 300), $row["created"], $row["status"]);
+        }
+        return $posts;
+    }
+
+    
+    static public function FindUserPosts($userDisplayName){
+        $posts = [];
+        $tableName = static::tableName();
+        $statement = self::prepare("SELECT * FROM $tableName WHERE author = :username ORDER BY id DESC");
+        $statement->bindValue(":username", $userDisplayName);
+        $statement->execute();
+        $rows = $statement->fetchAll();
+        foreach($rows as $row) {
+            $posts[] = new Blog($row["title"], $row["author"], substr($row["content"], 0, 100), $row["created"], $row["status"]);
+        }
+        return $posts;
+    }
+
+    static public function FindUserPublishedPosts($userDisplayName){
+        $posts = [];
+        $tableName = static::tableName();
+        $statement = self::prepare("SELECT * FROM $tableName WHERE author = :username AND status = published ORDER BY id DESC");
+        $statement->bindValue(":username", $userDisplayName);
+        $statement->execute();
+        $rows = $statement->fetchAll();
+        foreach($rows as $row) {
+            $posts[] = new Blog($row["title"], $row["author"], substr($row["content"], 0, 100), $row["created"], $row["status"]);
+        }
+        return $posts;
+    }
+
+
+
     public static function prepare($sql){
         return Application::$app->db->pdo->prepare($sql);
     }
 
     abstract public function getDisplayName(): string;
-
 }
