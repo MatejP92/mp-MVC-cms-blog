@@ -54,6 +54,10 @@ $app->router->post("/admin/new_post", [AdminController::class, "newPost"]);
 $app->router->get("/admin/edit_post", [AdminController::class, "editPost"]);
 $app->router->post("/admin/edit_post", [AdminController::class, "editPost"]);
 $app->router->get("/admin/post_preview", [AdminController::class, "postPreview"]);
+$app->router->get("/admin/delete_post", [AdminController::class, "deletePost"]);
+
+$app->router->get("/admin/publish_post", [AdminController::class, "changePostStatus"]); 
+$app->router->get("/admin/unpublish_post", [AdminController::class, "changePostStatus"]);
 
 $app->router->get("/admin/view_users", [AdminController::class, "viewUsers"]);
 $app->router->get("/admin/new_user", [AdminController::class, "newUser"]);
