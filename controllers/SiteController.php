@@ -51,9 +51,9 @@ class SiteController extends Controller {
             $postId = $_GET["id"];
             $post = Blog::findPostById((int)$postId);
 
-            // Add if the post status is draft to show 404 error
+            // Add if the post status is unpublished to show 404 error
             
-            if($post[0]->status == "draft") {
+            if($post[0]->status == "unpublished") {
                 throw new NotFoundException();
             } else {
             // Show the post
