@@ -10,6 +10,10 @@ $this->title = " - Post";
 <h2>
 <?php echo $p->title ?>
 </h2>
+<!-- POST STATUS GOES HERE -->
+<p>
+Status: <?php echo $p->status ?>
+</p>
 <!-- POST AUTHOR GOES HERE -->
 <p class="lead">
 by <a href=""><?php echo $p->author ?></a>

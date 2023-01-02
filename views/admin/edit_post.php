@@ -19,10 +19,10 @@ $this->title = " - Edit Post";
     <input type="text" id="author" name="author" class="form-control" value="<?php echo $p->author ?>" readonly><br>
 
     <label for="status">Post status: </label>
-    <?php if($p->status == "draft"): ?>
+    <?php if($p->status == "unpublished"): ?>
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="status" id="draft" value="draft" checked>
-            <label class="form-check-label" for="status">Draft</label>
+            <input class="form-check-input" type="radio" name="status" id="unpublished" value="unpublished" checked>
+            <label class="form-check-label" for="status">Unpublished</label>
         </div>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="status" id="published" value="published" <?php echo Application::$app->UserRole() !== "admin" ? "disabled": ""; ?>>
@@ -30,8 +30,8 @@ $this->title = " - Edit Post";
         </div>
     <?php elseif($p->status == "published"): ?>
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="status" id="draft" value="draft" >
-            <label class="form-check-label" for="status">Draft</label>
+            <input class="form-check-input" type="radio" name="status" id="unpublished" value="unpublished" >
+            <label class="form-check-label" for="status">Unpublished</label>
         </div>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="status" id="published" value="published" <?php echo Application::$app->UserRole() !== "admin" ? "disabled": ""; ?> checked>
@@ -44,7 +44,7 @@ $this->title = " - Edit Post";
     <div class="invalid-feedback">
         <?php //echo $model->getFirstError("content") ?>
     </div><br><br>
-    <input type="submit" name="submit" value="Edit" class="btn btn-primary">
+    <input type="submit" name="submit" value="Submit" class="btn btn-primary">
     </form>
 
 <?php endforeach; ?>

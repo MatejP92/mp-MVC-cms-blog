@@ -17,8 +17,8 @@ $this->title = " - New Post";
 
   <label for="status">Post status: </label>
   <div class="form-check form-check-inline">
-    <input class="form-check-input" type="radio" name="status" id="draft" value="draft" checked>
-    <label class="form-check-label" for="status">Draft</label>
+    <input class="form-check-input" type="radio" name="status" id="unpublished" value="unpublished" checked>
+    <label class="form-check-label" for="status">Unpublished</label>
   </div>
   <div class="form-check form-check-inline">
     <input class="form-check-input" type="radio" name="status" id="published" value="published" <?php echo Application::$app->UserRole() !== "admin" ? "disabled": ""; ?>>
