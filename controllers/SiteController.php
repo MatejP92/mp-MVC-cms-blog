@@ -4,7 +4,11 @@ namespace app\controllers;
 
 use app\core\Application;
 use app\core\Controller;
+use app\core\exception\ForbiddenException;
+use app\core\exception\NotFoundException;
+use app\core\Response;
 use app\models\Blog;
+use app\models\User;
 
 /**
 * class SiteController
@@ -23,7 +27,7 @@ class SiteController extends Controller {
         if(Application::isGuest()){
             $posts = [];
         } else {
-            $posts = Blog::FindUserPosts(Application::$app->user->getDisplayName());
+            $posts = Blog::findUserPublishedPosts(Application::$app->user->getDisplayName());
         }
         return $this->render("home", [
             "posts" => $posts
@@ -31,12 +35,39 @@ class SiteController extends Controller {
         // render method is created in Controller class in core folder
     }
 
+    // Show all published posts on the blog
     public function posts(){
-        $posts = Blog::FindAllPosts();
+        $posts = Blog::findAllPublishedPosts();
         return $this->render("posts", [
             "posts" => $posts
         ]);
     }
+
+    // Show the full content of the selected post on the blog
+    public function post(){
+        if(empty($_GET) || !$_GET["id"]) {
+            throw new NotFoundException();
+        } else {
+            $postId = $_GET["id"];
+            $post = Blog::findPostById((int)$postId);
+
+            // Add if the post status is draft to show 404 error
+            
+            if($post[0]->status == "draft") {
+                throw new NotFoundException();
+            } else {
+            // Show the post
+            if (!is_array($post)) {
+                $post = [$post];
+            }  
+                return $this->render("post", [
+                    "post" => $post,
+                    "id" => $postId
+                ]);
+            }
+        }
+    }
+
 
 
 }
