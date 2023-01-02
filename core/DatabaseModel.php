@@ -18,6 +18,11 @@ abstract class DatabaseModel extends Model{
         return 'id';
     }
     
+    /**
+     * Summary of save
+     * This method creates a new row in the database table with the given attributes
+     * @return bool
+     */
     public function save(){
         $tableName = $this->tableName();
         $attributes = $this->attributes();
@@ -30,7 +35,63 @@ abstract class DatabaseModel extends Model{
         return true;
     }
 
+    /**
+     * Summary of update
+     * This method updates the rows in the database table with the given attributes
+     * @return bool
+     */
+    public function update()  {
+        $tableName = $this->tableName();
+        $attributes = $this->attributes();
+        $params = array_map(fn($attr) => ":$attr", $attributes);
+        $set = implode(',', array_map(function($attr, $param) {
+            return "$attr = $param";
+        }, $attributes, $params));
+    
+        $statement = Application::$app->db->prepare("UPDATE $tableName SET $set WHERE id = :id");
+        foreach ($attributes as $attribute) {
+            $statement->bindValue(":$attribute", $this->{$attribute});
+        }
+        $statement->bindValue(":id", $this->id);
+        $statement->execute();
+        return true;
+    }
+    
 
+    /**
+     * Summary of updatePostStatus
+     * This metdhod is used to update the status of a post
+     * @return bool
+     */
+    public function updatePostStatus(){
+    $tableName = $this->tableName();
+    $statement = Application::$app->db->prepare("UPDATE $tableName SET status = :status WHERE id = :id");
+    $statement->bindValue(":status", $this->status);
+    $statement->bindValue(":id", $this->id);
+    $statement->execute();
+    return true;
+    }
+
+    /**
+     * Summary of deleteRecord
+     * This method deletes a record/row in a database table
+     * @return bool
+     */
+    public function deleteRecord(){
+        $tableName = $this->tableName();
+        $statement = Application::$app->db->prepare("DELETE FROM $tableName WHERE id = :id");
+        $statement->bindValue(":id", $this->id);
+        $statement->execute();
+        return true;
+    }
+    
+
+    /**
+     * Summary of findUser
+     * This method finds a user in a database
+     * @param mixed $where
+     * @return bool|object
+     */
     static public function findUser($where){ // [username => <database username>,]...
         $tableName = static::tableName();
         $attributes = array_keys($where);
@@ -44,8 +105,11 @@ abstract class DatabaseModel extends Model{
     }
 
 
-    
-    
+    /**
+     * Summary of findAllPosts
+     * This method finds all posts in a database
+     * @return array<Blog>
+     */
     static public function findAllPosts() {
         $posts = [];
         $tableName = static::tableName();
@@ -58,6 +122,11 @@ abstract class DatabaseModel extends Model{
         return $posts;
     }
    
+    /**
+     * Summary of findAllPublishedPosts
+     * This method finds all published posts in a database
+     * @return array<Blog>
+     */
     static public function findAllPublishedPosts(){
         $posts = [];
         $tableName = static::tableName();
@@ -71,7 +140,12 @@ abstract class DatabaseModel extends Model{
         return $posts;
     }
 
-    
+    /**
+     * Summary of findUserPosts
+     * This method finds all posts from a logged in user in a database
+     * @param mixed $userDisplayName
+     * @return array<Blog>
+     */
     static public function findUserPosts($userDisplayName){
         $posts = [];
         $tableName = static::tableName();
@@ -85,6 +159,12 @@ abstract class DatabaseModel extends Model{
         return $posts;
     }
 
+    /**
+     * Summary of findUserPublishedPosts
+     * This method finds all published posts from a logged in user in a database
+     * @param mixed $userDisplayName
+     * @return array<Blog>
+     */
     static public function findUserPublishedPosts($userDisplayName){
         $posts = [];
         $tableName = static::tableName();
@@ -99,6 +179,12 @@ abstract class DatabaseModel extends Model{
         return $posts;
     }
 
+    /**
+     * Summary of findPostById
+     * This method finds the post with the given id
+     * @param int $id
+     * @return array<Blog>
+     */
     static public function findPostById(int $id){
         $post = [];
         $tableName = static::tableName();
@@ -112,7 +198,11 @@ abstract class DatabaseModel extends Model{
         return $post;
     }
 
-
+    /**
+     * Summary of getId
+     * This method returns the id of the requested record in a database table
+     * @return mixed
+     */
     static public function getId(){
         $id = $_GET["id"];
         $tableName = static::tableName();
@@ -122,10 +212,20 @@ abstract class DatabaseModel extends Model{
         return $statement->fetchColumn();
     }
 
-
+    /**
+     * Summary of prepare
+     * This method returns the prepared statement for the database
+     * @param mixed $sql
+     * @return \PDOStatement|bool
+     */
     public static function prepare($sql){
         return Application::$app->db->pdo->prepare($sql);
     }
 
+    /**
+     * Summary of getDisplayName
+     * This method returns the display name of the logged in user
+     * @return string
+     */
     abstract public function getDisplayName(): string;
 }

@@ -54,7 +54,11 @@ class User extends DatabaseModel {
         ];
     }
 
+    public function userProfile(){
+        
+    }
     
+
 
     
     // update user method
@@ -63,7 +67,6 @@ class User extends DatabaseModel {
     // delete user method
 
 
-    // is logged in method
 
 
     // get user role method

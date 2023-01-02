@@ -26,30 +26,62 @@ class Blog extends DatabaseModel {
         $this->status = $status;
     }
 
-
+    /**
+     * Summary of tableName
+     * This method is used to get the name of the database table
+     * @return string
+     */
     public static function tableName(): string {
         return "posts";
     }
     
 
-
-
-    // Table columns
-
-
-    // Constructor with database connection
-
-
-    // Create a new post method
+    /**
+     * Summary of savePost
+     * This method is used to get the data for a post and send the data to DatabaseModel
+     * @return bool
+     */
     public function savePost(){
         $data = [
             "title" => $this->title,
             "author" => $this->author,
             "content" => $this->content,
             "status" => $this->status,
-            "created" => $this->created
         ];
         return parent::save();
+    }
+
+    /**
+     * Summary of updatePost
+     * @return bool
+     */
+    public function updatePost() {
+        $data = [
+            "title" => $this->title,
+            "author" => $this->author,
+            "content" => $this->content,
+            "status" => $this->status,
+            "created" => $this->created,
+        ];
+        return parent::update();
+    }
+    
+    /**
+     * Summary of updatePostStatus
+     * @return bool
+     */
+    public function updatePostStatus() {
+        $status = $this->status;
+        return parent::updatePostStatus();
+    }
+
+    /**
+     * Summary of deletePost
+     * This method sends a delete Post request to DatabaseModel
+     * @return bool
+     */
+    public function deletePost(){
+        return parent::deleteRecord();
     }
 
     // Get all blog posts
@@ -83,10 +115,7 @@ class Blog extends DatabaseModel {
     }
 
 
-    // update method
 
-
-    // delete method
     
     /**
      * @return array
