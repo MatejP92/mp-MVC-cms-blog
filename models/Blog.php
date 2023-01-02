@@ -10,13 +10,15 @@ use app\core\DatabaseModel;
  */
 
 class Blog extends DatabaseModel {
+    public int $id;
     public string $title = "";
     public string $author = "";
     public string $content = "";
     public string $created;
     public string $status = "";
 
-    public function __construct($title, $author, $content, $created, $status){
+    public function __construct($id, $title, $author, $content, $created, $status){
+        $this->id = $id;
         $this->title = $title;
         $this->author = $author;
         $this->content = $content;
@@ -51,30 +53,34 @@ class Blog extends DatabaseModel {
     }
 
     // Get all blog posts
-    public function GetAllPosts() {
-        $posts = Blog::FindAllPosts();
+    public function getAllPosts() {
+        $posts = Blog::findAllPosts();
         return $posts;
     }
 
     // Display posts from a user
-    public function GetUserPosts() {
-        $posts = Blog::FindUserPosts(Application::$app->user->getDisplayName());
+    public function getUserPosts() {
+        $posts = Blog::findUserPosts(Application::$app->user->getDisplayName());
         return $posts;
     }
 
     // Get all published posts
-    public function GetAllPublishedPosts() {
-        $posts = Blog::FindAllPublishedPosts();
+    public function getAllPublishedPosts() {
+        $posts = Blog::findAllPublishedPosts();
         return $posts;
     }
 
     // Get all published posts from user
-    public function GetUserPublishedPosts() {
-        $posts = Blog::FindUserPublishedPosts(Application::$app->user->getDisplayName());
+    public function getUserPublishedPosts() {
+        $posts = Blog::findUserPublishedPosts(Application::$app->user->getDisplayName());
         return $posts;
     }
 
-    // getById method
+    // Get post by id method
+    public function getPostById($id){
+        $post = Blog::findPostById($id);
+        return $post;
+    }
 
 
     // update method

@@ -46,14 +46,14 @@ abstract class DatabaseModel extends Model{
 
     
     
-    static public function FindAllPosts() {
+    static public function findAllPosts() {
         $posts = [];
         $tableName = static::tableName();
         $statement = self::prepare("SELECT * FROM $tableName ORDER BY id DESC");
         $statement->execute();
         $rows = $statement->fetchAll();
         foreach($rows as $row) {
-            $posts[] = new Blog($row["title"], $row["author"], substr($row["content"], 0, 300), $row["created"], $row["status"]);
+            $posts[] = new Blog($row["id"], $row["title"], $row["author"], substr($row["content"], 0, 200), $row["created"], $row["status"]);
         }
         return $posts;
     }
@@ -61,17 +61,18 @@ abstract class DatabaseModel extends Model{
     static public function findAllPublishedPosts(){
         $posts = [];
         $tableName = static::tableName();
-        $statement = self::prepare("SELECT * FROM $tableName WHERE status = published ORDER BY id DESC");
+        $statement = self::prepare("SELECT * FROM $tableName WHERE status = :status ORDER BY id DESC");
+        $statement->bindValue(":status", "published");
         $statement->execute();
         $rows = $statement->fetchAll();
         foreach($rows as $row) {
-            $posts[] = new Blog($row["title"], $row["author"], substr($row["content"], 0, 300), $row["created"], $row["status"]);
+            $posts[] = new Blog($row["id"], $row["title"], $row["author"], substr($row["content"], 0, 200), $row["created"], $row["status"]);
         }
         return $posts;
     }
 
     
-    static public function FindUserPosts($userDisplayName){
+    static public function findUserPosts($userDisplayName){
         $posts = [];
         $tableName = static::tableName();
         $statement = self::prepare("SELECT * FROM $tableName WHERE author = :username ORDER BY id DESC");
@@ -79,24 +80,47 @@ abstract class DatabaseModel extends Model{
         $statement->execute();
         $rows = $statement->fetchAll();
         foreach($rows as $row) {
-            $posts[] = new Blog($row["title"], $row["author"], substr($row["content"], 0, 100), $row["created"], $row["status"]);
+            $posts[] = new Blog($row["id"], $row["title"], $row["author"], substr($row["content"], 0, 200), $row["created"], $row["status"]);
         }
         return $posts;
     }
 
-    static public function FindUserPublishedPosts($userDisplayName){
+    static public function findUserPublishedPosts($userDisplayName){
         $posts = [];
         $tableName = static::tableName();
-        $statement = self::prepare("SELECT * FROM $tableName WHERE author = :username AND status = published ORDER BY id DESC");
+        $statement = self::prepare("SELECT * FROM $tableName WHERE author = :username AND status = :status ORDER BY id DESC");
         $statement->bindValue(":username", $userDisplayName);
+        $statement->bindValue("status", "published");
         $statement->execute();
         $rows = $statement->fetchAll();
         foreach($rows as $row) {
-            $posts[] = new Blog($row["title"], $row["author"], substr($row["content"], 0, 100), $row["created"], $row["status"]);
+            $posts[] = new Blog($row["id"], $row["title"], $row["author"], substr($row["content"], 0, 200), $row["created"], $row["status"]);
         }
         return $posts;
     }
 
+    static public function findPostById(int $id){
+        $post = [];
+        $tableName = static::tableName();
+        $statement = self::prepare("SELECT * FROM $tableName WHERE id = :id");
+        $statement->bindValue(":id", $id, \PDO::PARAM_INT);
+        $statement->execute();
+        $rows = $statement->fetchAll();
+        foreach($rows as $row) {
+            $post[] = new Blog($row["id"], $row["title"], $row["author"], $row["content"], $row["created"], $row["status"]);
+        }
+        return $post;
+    }
+
+
+    static public function getId(){
+        $id = $_GET["id"];
+        $tableName = static::tableName();
+        $statement = self::prepare("SELECT id FROM $tableName WHERE id = :id");
+        $statement->bindValue(":id", $id, \PDO::PARAM_INT);
+        $statement->execute();
+        return $statement->fetchColumn();
+    }
 
 
     public static function prepare($sql){
