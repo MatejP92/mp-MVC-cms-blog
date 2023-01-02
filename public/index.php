@@ -5,7 +5,7 @@ use app\core\Application;
 use app\controllers\SiteController;
 use app\controllers\UserController;
 use app\controllers\AdminController;
-use app\controllers\ContentCreatorController;
+
 
 /**
 * The public/index.php file would be the entry point for the application. It would initialize 
@@ -33,6 +33,8 @@ $userRole = "guest";
 
 $app->router->get("/", [SiteController::class, "home"]);
 $app->router->get("/posts", [SiteController::class, "posts"]);
+$app->router->get("/post", [SiteController::class, "post"]);
+
 
 $app->router->get("/profile", [UserController::class, "profile"]);
 
@@ -49,8 +51,13 @@ $app->router->get("/admin", [AdminController::class, "admin"]);
 $app->router->get("/admin/view_posts", [AdminController::class, "viewPosts"]);
 $app->router->get("/admin/new_post", [AdminController::class, "newPost"]);
 $app->router->post("/admin/new_post", [AdminController::class, "newPost"]);
+$app->router->get("/admin/edit_post", [AdminController::class, "editPost"]);
+$app->router->post("/admin/edit_post", [AdminController::class, "editPost"]);
+$app->router->get("/admin/post_preview", [AdminController::class, "postPreview"]);
+
 $app->router->get("/admin/view_users", [AdminController::class, "viewUsers"]);
 $app->router->get("/admin/new_user", [AdminController::class, "newUser"]);
+
 $app->router->get("/admin/comments", [AdminController::class, "comments"]);
 
 

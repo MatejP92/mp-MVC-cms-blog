@@ -1,9 +1,12 @@
 <?php use app\core\Application; ?>
+<?php 
+/** @var $this \app\core\View */
+$this->title = " - New Post"; 
+?>
 
-<br>
 <h2 class="text-center">New post</h2>
 
-<form method="POST" action="" class="mx-auto bg-light bg-gradient mt-5 mb-5 p-3 w-50">
+<form method="POST" action="" class="mx-auto bg-light bg-gradient mt-5 mb-5 p-3 w-75">
   <label for="title">Title:</label><br>
   <input type="text" id="title" name="title" class="form-control <?php echo $model->hasError("title") ? "is-invalid" : "" ?>">
   <div class="invalid-feedback">

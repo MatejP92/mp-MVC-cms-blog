@@ -1,6 +1,6 @@
 <?php use app\core\Application; ?>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <?php if(Application::$app->UserRole() == "admin"): ?>
                 <a class="navbar-brand" href="/admin">Admin Dashboard</a>
@@ -14,9 +14,6 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                         <a class="nav-link" href="/admin">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Main page</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -52,6 +49,9 @@
                         </li>
                         <li class="nav-item mx-1">
                             <a class="nav-link" href="/profile">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Main page</a>
                         </li>
                         <li class="nav-item mx-1">
                             <a class="nav-link" href="/logout">Logout</a>

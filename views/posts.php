@@ -10,7 +10,7 @@ $this->title = " - Posts";
 
     <!-- POST TITLE GOES HERE -->
 <h3>
-    <a href=""><?php echo $post->title ?></a>
+    <a href="/post?id=<?php echo $post->id ?>"><?php echo $post->title ?></a>
 </h3>
 <!-- POST AUTHOR GOES HERE -->
 <p class="lead">
@@ -21,7 +21,7 @@ $this->title = " - Posts";
 <hr>
 <!-- POST CONTENT GOES HERE -->
 <p><?php echo $post->content ?></p>  
-<small><a class="btn btn-secondary" href="#">Read More</a></small> <!-- Read More takes us to the full post -->
+<small><a class="btn btn-secondary" href="/post?id=<?php echo $post->id ?>">Read More</a></small> <!-- Read More takes us to the full post -->
 <hr><hr>
 
 <?php endforeach; ?>

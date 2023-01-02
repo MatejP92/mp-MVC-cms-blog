@@ -1,25 +1,9 @@
-<br><h2>View All Posts</h2><br>
+<?php 
+/** @var $this \app\core\View */
+$this->title = " - View all Posts"; 
+?>
 
-<!-- <table border="2">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Content</th>
-            <th>Creation Date</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <?php foreach($posts as $post): ?>
-    <tr>
-        <td><?php echo $post->title ?></td>
-        <td><?php echo $post->author ?></td>
-        <td><?php echo $post->content ?></td>
-        <td><?php echo $post->created ?></td>
-        <td><?php echo $post->status ?></td>
-    </tr>
-    <?php endforeach; ?>
-</table> -->
+<h2>View All Posts</h2><br>
 
 <table class="table table-dark table-hover">
     <thead>
@@ -29,16 +13,20 @@
             <th>Content</th>
             <th>Creation Date</th>
             <th>Status</th>
+            <th>Edit Post</th>
+            <th>Preview Post</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach($posts as $post): ?>
         <tr>
-            <td><?php echo $post->title ?></td>
+            <td><a href="/post?id=<?php echo $post->id ?>"><?php echo $post->title ?></a></td>
             <td><?php echo $post->author ?></td>
             <td><?php echo $post->content ?></td>
             <td><?php echo $post->created ?></td>
             <td><?php echo $post->status ?></td>
+            <td><a href="/admin/edit_post?id=<?php echo $post->id ?>">Edit</a></td>
+            <td><a href="/admin/post_preview?id=<?php echo $post->id ?>">Preview</a>
         </tr>
         <?php endforeach; ?>
     </tbody>

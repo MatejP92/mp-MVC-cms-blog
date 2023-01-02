@@ -21,10 +21,11 @@
 
 <!-- NAVBAR START -->
    <?php include_once "shared/navbar.php" ?>
+   <br>
 <!-- NAVBAR END -->
 
 <!-- PLACEHOLDER -->
-<div class="container">
+<div class="container mt-5">
     <?php if(Application::$app->session->getFlash("success")): ?>
     <div class="alert alert-success">
         <?php echo Application::$app->session->getFlash("success") ?>
