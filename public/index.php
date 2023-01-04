@@ -5,7 +5,7 @@ use app\core\Application;
 use app\controllers\SiteController;
 use app\controllers\UserController;
 use app\controllers\AdminController;
-
+use app\controllers\ProfileController;
 
 /**
 * The public/index.php file would be the entry point for the application. It would initialize 
@@ -36,7 +36,11 @@ $app->router->get("/posts", [SiteController::class, "posts"]);
 $app->router->get("/post", [SiteController::class, "post"]);
 
 
-$app->router->get("/profile", [UserController::class, "profile"]);
+$app->router->get("/profile", [ProfileController::class, "profile"]);
+$app->router->get("/edit_profile", [ProfileController::class, "editProfile"]);
+$app->router->post("/edit_profile", [ProfileController::class, "editProfile"]);
+$app->router->get("/change_password", [ProfileController::class, "changePassword"]);
+$app->router->post("/change_password", [ProfileController::class, "changePassword"]);
 
 $app->router->get("/login", [UserController::class, "login"]);
 $app->router->post("/login", [UserController::class, "login"]);
