@@ -38,7 +38,15 @@ abstract class Model {
     /**
     * Validation rule that prevents the use of special characters
     */
-    const RULE_NO_SPECIAL_CHARS = "no_special_chars";
+    public const RULE_NO_SPECIAL_CHARS = "no_special_chars";
+    /**
+     * Validation rule that validates the password
+     */
+    public const RULE_PW_VALIDATE = "pw_validate";
+    /**
+    * Validation rule that specifies a value must not match some other value
+    */
+    public const RULE_NO_MATCH = 'no_match';
 
     public function loadData($data) {
         foreach ($data as $key => $value) {
@@ -82,6 +90,10 @@ abstract class Model {
                     $rule["match"] = $this->getLabel($rule["match"]);
                     $this->addErrorForRule($attribute, self::RULE_MATCH, $rule);
                 }
+                if($ruleName === self::RULE_NO_MATCH && $value == $this->{$rule["match"]}){
+                    $rule["match"] = $this->getLabel($rule["match"]);
+                    $this->addErrorForRule($attribute, self::RULE_NO_MATCH, $rule);
+                }
                 if($ruleName === self::RULE_NO_SPECIAL_CHARS && preg_match('/[^A-Za-z0-9]/', $value)){
                     $this->addErrorForRule($attribute, self::RULE_NO_SPECIAL_CHARS);
                 }
@@ -97,6 +109,24 @@ abstract class Model {
                         $this->addErrorForRule($attribute, self::RULE_UNIQUE, ["field" => $this->getLabel($attribute)]);
                     }
                 }
+                if($ruleName === self::RULE_PW_VALIDATE){
+                    $className = $rule["class"];
+                    $uniqueAttr = "id"; // Set $uniqueAttr to "id"
+                    $tableName = $className::tableName();
+                    $statement = Application::$app->db->prepare("SELECT password FROM $tableName WHERE $uniqueAttr=:attr");
+                    $statement->execute(["attr" => $this->$uniqueAttr]);
+                    $record = $statement->fetchObject();
+                    if (!$record) {
+                        // Add an error if the provided attribute value is not found in the database
+                        $this->addErrorForRule($attribute, self::RULE_PW_VALIDATE, ["field" => $this->getLabel($attribute)]);
+                    } else {
+                        // Check if the provided password matches the encrypted password in the database
+                        if (!password_verify($this->$attribute, $record->password)) {
+                            $this->addErrorForRule($attribute, self::RULE_PW_VALIDATE, ["field" => $this->getLabel($attribute)]);
+                        }
+                    }
+                }
+                
             }
         }
         return empty($this->errors);
@@ -120,8 +150,10 @@ abstract class Model {
             self::RULE_EMAIL    => "This field must be a valid email address",
             self::RULE_MIN      => "Minimum length of the password must be at least {min} characters",
             self::RULE_MATCH    => "This field must be the same as {match}",
+            self::RULE_NO_MATCH    => "This field must not be the same as {match}",
             self::RULE_UNIQUE   => "Record with this {field} already exists",
-            self::RULE_NO_SPECIAL_CHARS  => "No special characters are allowed"
+            self::RULE_NO_SPECIAL_CHARS  => "No special characters are allowed",
+            self::RULE_PW_VALIDATE => "Current password is incorrect",
         ];
     }
 
