@@ -29,8 +29,8 @@ $this->title = " - View all Posts";
             <td><?php echo $post->author ?></td>
             <td><?php echo $post->content ?></td>
             <td><?php echo $post->created ?></td>
-            <td><a href="/admin/edit_post?id=<?php echo $post->id ?>" class="btn btn-primary btn-sm">Edit</a></td>
-            <td><a href="/admin/post_preview?id=<?php echo $post->id ?>" class="btn btn-outline-primary btn-sm">Preview</a>
+            <td><a href="/dashboard/edit_post?id=<?php echo $post->id ?>" class="btn btn-primary btn-sm">Edit</a></td>
+            <td><a href="/dashboard/post_preview?id=<?php echo $post->id ?>" class="btn btn-outline-primary btn-sm">Preview</a>
 
             <?php if($post->status == "unpublished"): ?>
                 <td class="text-danger"><?php echo $post->status ?></a></td>
@@ -39,12 +39,12 @@ $this->title = " - View all Posts";
             <?php endif; ?>
             <?php if(Application::$app->userRole() == "admin"): ?>
                 <?php if($post->status == "unpublished"): ?>
-                    <td><a class="btn btn-outline-success btn-sm" href="/admin/publish_post?id=<?php echo $post->id ?>" onclick="return confirm('Are you sure you want to Publish this post?');">Publish</a></td> 
+                    <td><a class="btn btn-outline-success btn-sm" href="/dashboard/publish_post?id=<?php echo $post->id ?>" onclick="return confirm('Are you sure you want to Publish this post?');">Publish</a></td> 
                 <?php else: ?>
-                    <td><a class="btn btn-outline-danger btn-sm" href="/admin/unpublish_post?id=<?php echo $post->id ?>" onclick="return confirm('Are you sure you want to Unpublish this post?');">Unpublish</a></td>
+                    <td><a class="btn btn-outline-danger btn-sm" href="/dashboard/unpublish_post?id=<?php echo $post->id ?>" onclick="return confirm('Are you sure you want to Unpublish this post?');">Unpublish</a></td>
                 <?php endif; ?>
             <?php endif; ?>
-            <td><a class="btn btn-danger btn-sm" href="/admin/delete_post?id=<?php echo $post->id ?>" onclick="return confirm('Are you sure you want to delete this post?');">Delete</a></td>
+            <td><a class="btn btn-danger btn-sm" href="/dashboard/delete_post?id=<?php echo $post->id ?>" onclick="return confirm('Are you sure you want to delete this post?');">Delete</a></td>
         </tr>
         <?php endforeach; ?>
     </tbody>

@@ -32,11 +32,11 @@
                         </li>
                         <?php if(Application::$app->UserRole() == "admin"): ?>
                             <li class="nav-item mx-1">
-                                <a class="nav-link" href="/admin">Admin Dashboard</a>
+                                <a class="nav-link" href="/dashboard">Admin Dashboard</a>
                             </li>
                         <?php elseif(Application::$app->UserRole() == "subscriber"): ?>
                             <li class="nav-item mx-1">
-                                <a class="nav-link" href="/admin">Dashboard</a>
+                                <a class="nav-link" href="/dashboard">Dashboard</a>
                             </li>
                         <?php endif; ?>
                         <li class="nav-item mx-1">

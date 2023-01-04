@@ -13,9 +13,13 @@ class User extends DatabaseModel {
 
     public string $id;
     public string $username = "";
+    public ?string $firstname = null;
+    public ?string $lastname = null;
     public string $email = "";
     public string $password = "";
     public string $repeatPassword = "";
+    public string $role = "";
+    public string $created = "";
 
 
     public static function tableName(): string {
@@ -67,6 +71,16 @@ class User extends DatabaseModel {
         $user = User::findUser(["username" => "$username"]);
         return $user->role;
     }
+
+    public function updateUserRole() {
+        $role = $this->role;
+        return parent::updateUserRole();
+    }
+
+    public function deleteUser(){
+        return parent::deleteRecord();
+    }
+
 
 
 	public function getDisplayName(): string {

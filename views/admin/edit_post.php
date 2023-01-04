@@ -11,9 +11,9 @@ $this->title = " - Edit Post";
 
     <form method="POST" action="" class="mx-auto bg-light bg-gradient mt-5 mb-5 p-3 w-75">
     <label for="title">Title:</label><br>
-    <input type="text" id="title" name="title" class="form-control <?php //echo $model->hasError("title") ? "is-invalid" : "" ?>" value="<?php echo $p->title ?>">
+    <input type="text" id="title" name="title" class="form-control <?php echo $model->hasError("title") ? "is-invalid" : "" ?>" value="<?php echo $p->title ?>">
     <div class="invalid-feedback">
-        <?php //echo $model->getFirstError("title") ?>
+        <?php echo $model->getFirstError("title") ?>
     </div><br>
     <label for="author">Author:</label><br>
     <input type="text" id="author" name="author" class="form-control" value="<?php echo $p->author ?>" readonly><br>
@@ -40,9 +40,9 @@ $this->title = " - Edit Post";
     <?php endif; ?>
     <br><br>
     <label for="content">Content:</label><br>
-    <textarea id="content" name="content" class="form-control <?php //echo $model->hasError("content") ? 'is-invalid' : '' ?>"><?php echo $p->content ?></textarea>
+    <textarea id="content" name="content" class="form-control <?php echo $model->hasError("content") ? 'is-invalid' : '' ?>"><?php echo $p->content ?></textarea>
     <div class="invalid-feedback">
-        <?php //echo $model->getFirstError("content") ?>
+        <?php echo $model->getFirstError("content") ?>
     </div><br><br>
     <input type="submit" name="submit" value="Submit" class="btn btn-primary">
     </form>

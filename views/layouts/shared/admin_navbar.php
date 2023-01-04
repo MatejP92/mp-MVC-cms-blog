@@ -3,9 +3,9 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <?php if(Application::$app->UserRole() == "admin"): ?>
-                <a class="navbar-brand" href="/admin">Admin Dashboard</a>
+                <a class="navbar-brand" href="/dashboard">Admin Dashboard</a>
             <?php else: ?>
-                <a class="navbar-brand" href="/admin">Content Creator Dashboard</a>
+                <a class="navbar-brand" href="/dashboard">Content Creator Dashboard</a>
             <?php endif; ?>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -13,7 +13,7 @@
             <div class="collapse navbar-collapse mx-4" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                        <a class="nav-link" href="/admin">Dashboard</a>
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -21,26 +21,26 @@
                         </a>                
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <?php if(Application::$app->UserRole() == "admin"): ?>
-                            <li><a class="dropdown-item" href="/admin/view_posts">View All Posts</a></li>
+                            <li><a class="dropdown-item" href="/dashboard/view_posts">View All Posts</a></li>
                         <?php elseif(Application::$app->UserRole() == "subscriber"): ?>
-                            <li><a class="dropdown-item" href="/admin/view_posts">View Your Posts</a></li>
+                            <li><a class="dropdown-item" href="/dashboard/view_posts">View Your Posts</a></li>
                         <?php endif; ?>
-                            <li><a class="dropdown-item" href="/admin/new_post">Create Post</a></li>
+                            <li><a class="dropdown-item" href="/dashboard/new_post">Create Post</a></li>
                         </ul>
                     </li>
                     <?php if(Application::$app->UserRole() == "admin"): ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/comments">Comments</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Users
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/admin/view_users">View All Users</a></li>
-                            <li><a class="dropdown-item" href="/admin/new_user">Create User</a></li>
-                        </ul>
-                    </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Users
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="/dashboard/view_users">View All Users</a></li>
+                                <li><a class="dropdown-item" href="/dashboard/new_user">Create User</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/dashboard/comments">Comments</a>
+                        </li>
                     <?php endif; ?>
                 </ul>
                 <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
