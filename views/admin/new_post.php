@@ -26,7 +26,14 @@ $this->title = " - New Post";
   </div><br>
   <br>
   <label for="content">Content:</label><br>
-  <textarea id="content" name="content" class="form-control <?php echo $model->hasError("content") ? 'is-invalid' : '' ?>"></textarea>
+  <textarea id="editor" name="content" class="form-control <?php echo $model->hasError("content") ? 'is-invalid' : '' ?>"></textarea>
+  <script>
+    ClassicEditor
+      .create( document.querySelector( '#editor' ) )
+      .catch( error => {
+          console.error( error );
+      } );
+  </script>
   <div class="invalid-feedback">
       <?php echo $model->getFirstError("content") ?>
   </div><br><br>

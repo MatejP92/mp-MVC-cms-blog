@@ -29,6 +29,7 @@ class SiteController extends Controller {
         } else {
             $posts = Blog::findUserPublishedPosts(Application::$app->user->getDisplayName());
         }
+        $posts[0]->content = htmlspecialchars_decode($posts[0]->content);
         return $this->render("home", [
             "posts" => $posts
         ]);  // this replaces the Application::$app->router->renderView("home", $params); 
@@ -38,6 +39,7 @@ class SiteController extends Controller {
     // Show all published posts on the blog
     public function posts(){
         $posts = Blog::findAllPublishedPosts();
+        $posts[0]->content = htmlspecialchars_decode($posts[0]->content);
         return $this->render("posts", [
             "posts" => $posts
         ]);
@@ -60,10 +62,11 @@ class SiteController extends Controller {
             if (!is_array($post)) {
                 $post = [$post];
             }  
-                return $this->render("post", [
-                    "post" => $post,
-                    "id" => $postId
-                ]);
+            $post[0]->content = htmlspecialchars_decode($post[0]->content);
+            return $this->render("post", [
+                "post" => $post,
+                "id" => $postId
+            ]);
             }
         }
     }

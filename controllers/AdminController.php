@@ -57,7 +57,7 @@ class AdminController extends Controller {
         $id = empty($id);
         $title = isset($request->getBody()['title']) ?? "";
         $author = isset($request->getBody()['author']) ?? "";
-        $content = isset($request->getBody()['content']) ?? "";
+        $content = htmlspecialchars(isset($request->getBody()['content']) ?? "");
         $status = isset($request->getBody()['status']) ?? "";
         $created = "";
         $postModel = new Blog($id, $title, $author, $content, $status, $created);
@@ -100,6 +100,7 @@ class AdminController extends Controller {
             // Show only the user's posts
             $posts = Blog::FindUserPosts(Application::$app->user->getDisplayName());
         }
+        $posts[0]->content = strip_tags(htmlspecialchars_decode($posts[0]->content), "<p>");
         $this->setLayout("admin");
         return $this->render("/view_posts", [
             "posts" => $posts
@@ -127,7 +128,7 @@ class AdminController extends Controller {
                 $id = $post[0]->id;
                 $title = isset($request->getBody()['title']) ?? "";
                 $author = isset($request->getBody()['author']) ?? "";
-                $content = isset($request->getBody()['content']) ?? "";
+                $content = htmlspecialchars(isset($request->getBody()['content']) ?? "");
                 $status = isset($request->getBody()['status']) ?? "";
                 $created = $post[0]->created;
 
@@ -177,6 +178,7 @@ class AdminController extends Controller {
             }
         }
         $this->setLayout("admin");
+        $post[0]->content = htmlspecialchars_decode($post[0]->content);
         return $this->render("post_preview", [
             "post" => $post,
             "id" => $postId
