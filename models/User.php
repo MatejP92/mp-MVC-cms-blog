@@ -11,10 +11,12 @@ use app\core\DatabaseModel;
 
 class User extends DatabaseModel {
 
+    public string $id;
     public string $username = "";
     public string $email = "";
     public string $password = "";
     public string $repeatPassword = "";
+
 
     public static function tableName(): string {
         return "users";
@@ -39,6 +41,8 @@ class User extends DatabaseModel {
     public function attributes(): array {
         return [
             "username",
+            "firstname",
+            "lastname",
             "email",
             "password",
         ];
@@ -50,21 +54,9 @@ class User extends DatabaseModel {
             "username" => [self::RULE_REQUIRED, [self::RULE_UNIQUE, "class" => self::class], self::RULE_NO_SPECIAL_CHARS],
             "email" => [self::RULE_REQUIRED, self::RULE_EMAIL, [self::RULE_UNIQUE, "class" => self::class],],
             "password" => [self::RULE_REQUIRED, [self::RULE_MIN, "min" => 5]],
-            "repeatPassword" => [self::RULE_REQUIRED, [self::RULE_MATCH, "match" => "password"]]
+            "repeatPassword" => [self::RULE_REQUIRED, [self::RULE_MATCH, "match" => "password"]],
         ];
     }
-
-    public function userProfile(){
-        
-    }
-    
-
-
-    
-    // update user method
-
-
-    // delete user method
 
 
 

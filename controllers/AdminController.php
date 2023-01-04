@@ -64,10 +64,9 @@ class AdminController extends Controller {
 
         if($request->isPost()) {
             $postModel->loadData($request->getBody());
-            if($postModel->validate() && $postModel->save()) {
+            if($postModel->validate() && $postModel->savePost()) {
                 Application::$app->session->setFlash("success", "Your post has been saved, you can create a new post <a href='admin/new_post'>HERE</a> or you can view <a href='/admin/view_posts'>ALL POSTS</a>.");
-                Application::$app->response->redirect("/admin");
-                return;
+                Application::$app->response->redirect("/admin");      
             }
             // save the post
         }
@@ -135,10 +134,10 @@ class AdminController extends Controller {
                 $editModel = new Blog($id, $title, $author, $content, $status, $created);
                 if ($request->isPost()) {
                     $editModel->loadData($request->getBody());
-                    if ($editModel->validate() && $editModel->update()) {
+                    if ($editModel->validate() && $editModel->updatePost()) {
                         Application::$app->session->setFlash("success", "Post has been edited.");
                         Application::$app->response->redirect("/admin/view_posts");
-                        return;
+                        //return;
                     }
                     // update the post
                 }

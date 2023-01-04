@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\core\Application;
 use app\core\Controller;
+use app\core\exception\NotFoundException;
 use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\core\Response;
@@ -73,12 +74,6 @@ class UserController extends Controller {
     public function logout(Request $request, Response $response) {
         Application::$app->logout();
         $response->redirect("/");
-    }
-
-    // profile page
-    public function profile(){
-        
-        return $this->render("profile");
     }
 
 
