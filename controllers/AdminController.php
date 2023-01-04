@@ -65,8 +65,8 @@ class AdminController extends Controller {
         if($request->isPost()) {
             $postModel->loadData($request->getBody());
             if($postModel->validate() && $postModel->savePost()) {
-                Application::$app->session->setFlash("success", "Your post has been saved, you can create a new post <a href='admin/new_post'>HERE</a> or you can view <a href='/admin/view_posts'>ALL POSTS</a>.");
-                Application::$app->response->redirect("/admin");      
+                Application::$app->session->setFlash("success", "Your post has been saved, you can create a new post <a href='admin/new_post'>HERE</a> or you can view <a href='/dashboard/view_posts'>ALL POSTS</a>.");
+                Application::$app->response->redirect("/dashboard");      
             }
             // save the post
         }
@@ -136,7 +136,7 @@ class AdminController extends Controller {
                     $editModel->loadData($request->getBody());
                     if ($editModel->validate() && $editModel->updatePost()) {
                         Application::$app->session->setFlash("success", "Post has been edited.");
-                        Application::$app->response->redirect("/admin/view_posts");
+                        Application::$app->response->redirect("/dashboard/view_posts");
                         //return;
                     }
                     // update the post
@@ -208,7 +208,8 @@ class AdminController extends Controller {
                 
             }
         }
-        Application::$app->response->redirect("/admin/view_posts");
+        Application::$app->session->setFlash("success", "Post status updated");
+        Application::$app->response->redirect("/dashboard/view_posts");
         return $this->ViewPosts();
     }
     
@@ -231,7 +232,8 @@ class AdminController extends Controller {
                 $postObject->deletePost();
             }
         }
-        Application::$app->response->redirect("/admin/view_posts");
+        Application::$app->session->setFlash("success", "Post has been deleted");
+        Application::$app->response->redirect("/dashboard/view_posts");
         return $this->ViewPosts();
     }
 
@@ -241,8 +243,62 @@ class AdminController extends Controller {
      * @return array|string
      */
     public function viewUsers(){
+        $userRole = User::findUser(["username" => Application::$app->user->getDisplayName()])->role;
+        if ($userRole == "admin") {
+            $users = User::findAllUsers();
+        } else {
+            throw new NotFoundException();
+        }
         $this->setLayout("admin");
-        return $this->render("/view_users");
+        return $this->render("/view_users",[
+            "users" => $users
+        ]);
+    }
+
+    public function ChangeUserRole(){
+        if (empty($_GET) || !$_GET["id"] || Application::$app->userRole() !== "admin") {
+            throw new NotFoundException();
+        } else {
+            $userId = (int)$_GET["id"];
+            $user = User::findUser(["id" => $userId]);
+            if (empty($user)) {
+                throw new NotFoundException();
+            } else {
+                $userRole = $user->role;
+                if($userRole == "admin") {
+                $user->role = "subscriber";
+            } elseif ($userRole == "subscriber") {
+                $user->role = "admin";
+            }
+            $user->updateUserRole();
+            }
+        }
+        Application::$app->session->setFlash("success", "User role has been updated");
+        Application::$app->response->redirect("/dashboard/view_users");
+        return $this->viewUsers();
+    }
+
+    /**
+     * Summary of deleteUser
+     * This method is called when admin wants to delete the user
+     * @throws NotFoundException
+     * @return array|string
+     */
+    public function deleteUser(){
+        if (empty($_GET) || !$_GET["id"] || Application::$app->userRole() !== "admin") {
+            throw new NotFoundException();
+        } else {
+            $userId = (int)$_GET["id"];
+            $user = User::findUser(["id" => $userId]);
+            if (empty($user)) {
+                throw new NotFoundException();
+            } else {
+                $user->deleteUser();
+            }
+        }
+        Application::$app->session->setFlash("success", "User has been deleted");
+        Application::$app->response->redirect("/dashboard/view_users");
+        return $this->viewUsers();
     }
 
     /**

@@ -152,6 +152,30 @@ abstract class DatabaseModel extends Model{
         $statement->execute();
         return true;
     }    
+
+    /**
+     * Summary of findAllUsers
+     * This method finds all users in a database
+     * @return array<User>
+     */
+    static public function findAllUsers() {
+        $users = [];
+        $tableName = static::tableName();
+        $statement = self::prepare("SELECT * FROM $tableName ORDER BY id ASC");
+        $statement->execute();
+        $users = $statement->fetchAll();
+        return $users;
+    }
+
+    public function updateUserRole(){
+        $tableName = $this->tableName();
+        $statement = Application::$app->db->prepare("UPDATE $tableName SET role = :role WHERE id = :id");
+        $statement->bindValue(":role", $this->role);
+        $statement->bindValue(":id", $this->id);
+        $statement->execute();
+        return true;
+        }
+
     
 
     /******************** USER DATABASE METHODS END ********************/
