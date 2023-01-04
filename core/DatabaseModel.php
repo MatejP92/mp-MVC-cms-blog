@@ -18,6 +18,9 @@ abstract class DatabaseModel extends Model{
         return 'id';
     }
     
+
+    /******************** GENERAL DATABASE METHODS ********************/
+
     /**
      * Summary of save
      * This method creates a new row in the database table with the given attributes
@@ -56,23 +59,22 @@ abstract class DatabaseModel extends Model{
         $statement->execute();
         return true;
     }
-    
 
     /**
-     * Summary of updatePostStatus
-     * This metdhod is used to update the status of a post
-     * @return bool
-     */
-    public function updatePostStatus(){
-    $tableName = $this->tableName();
-    $statement = Application::$app->db->prepare("UPDATE $tableName SET status = :status WHERE id = :id");
-    $statement->bindValue(":status", $this->status);
-    $statement->bindValue(":id", $this->id);
-    $statement->execute();
-    return true;
+    * Summary of getId
+    * This method returns the id of the requested record in a database table
+    * @return mixed
+    */
+    static public function getId(){
+        $id = $_GET["id"];
+        $tableName = static::tableName();
+        $statement = self::prepare("SELECT id FROM $tableName WHERE id = :id");
+        $statement->bindValue(":id", $id, \PDO::PARAM_INT);
+        $statement->execute();
+        return $statement->fetchColumn();
     }
 
-    /**
+     /**
      * Summary of deleteRecord
      * This method deletes a record/row in a database table
      * @return bool
@@ -85,6 +87,30 @@ abstract class DatabaseModel extends Model{
         return true;
     }
     
+
+    /**
+     * Summary of prepare
+     * This method returns the prepared statement for the database
+     * @param mixed $sql
+     * @return \PDOStatement|bool
+     */
+    public static function prepare($sql){
+        return Application::$app->db->pdo->prepare($sql);
+    }
+
+    /**
+     * Summary of getDisplayName
+     * This method returns the display name of the logged in user
+     * @return string
+     */
+    abstract public function getDisplayName(): string;
+    
+
+    /******************** GENERAL DATABASE METHODS END ********************/
+
+
+   
+    /******************** USER DATABASE METHODS ********************/
 
     /**
      * Summary of findUser
@@ -104,6 +130,34 @@ abstract class DatabaseModel extends Model{
         return $statement->fetchObject(static::class);
     }
 
+
+    public function updateProfile($data) {
+        $tableName = $this->tableName();
+        $statement = Application::$app->db->prepare("UPDATE $tableName SET username = :username, firstname = :firstname, lastname = :lastname, email = :email WHERE id = :id");
+        $statement->bindValue(":id", $data["id"]);
+        $statement->bindValue(":username", $data["username"]);
+        $statement->bindValue(":firstname", $data["firstname"]);
+        $statement->bindValue(":lastname", $data["lastname"]);
+        $statement->bindValue(":email", $data["email"]);
+        $statement->execute();
+        return true;
+    }
+
+
+    public function updatePassword($data){
+        $tableName = $this->tableName();
+        $statement = Application::$app->db->prepare("UPDATE $tableName SET password = :password WHERE id = :id");
+        $statement->bindValue(":password", $data["password"]);
+        $statement->bindValue(":id", $data["id"]);
+        $statement->execute();
+        return true;
+    }    
+    
+
+    /******************** USER DATABASE METHODS END ********************/
+
+
+    /******************** POST DATABASE METHODS ********************/
 
     /**
      * Summary of findAllPosts
@@ -198,34 +252,20 @@ abstract class DatabaseModel extends Model{
         return $post;
     }
 
-    /**
-     * Summary of getId
-     * This method returns the id of the requested record in a database table
-     * @return mixed
+     /**
+     * Summary of updatePostStatus
+     * This metdhod is used to update the status of a post
+     * @return bool
      */
-    static public function getId(){
-        $id = $_GET["id"];
-        $tableName = static::tableName();
-        $statement = self::prepare("SELECT id FROM $tableName WHERE id = :id");
-        $statement->bindValue(":id", $id, \PDO::PARAM_INT);
+    public function updatePostStatus(){
+        $tableName = $this->tableName();
+        $statement = Application::$app->db->prepare("UPDATE $tableName SET status = :status WHERE id = :id");
+        $statement->bindValue(":status", $this->status);
+        $statement->bindValue(":id", $this->id);
         $statement->execute();
-        return $statement->fetchColumn();
-    }
+        return true;
+        }
 
-    /**
-     * Summary of prepare
-     * This method returns the prepared statement for the database
-     * @param mixed $sql
-     * @return \PDOStatement|bool
-     */
-    public static function prepare($sql){
-        return Application::$app->db->pdo->prepare($sql);
-    }
+    /******************** POST DATABASE METHODS END ********************/
 
-    /**
-     * Summary of getDisplayName
-     * This method returns the display name of the logged in user
-     * @return string
-     */
-    abstract public function getDisplayName(): string;
 }
