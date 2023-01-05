@@ -36,6 +36,10 @@ abstract class Model {
     */
     public const RULE_UNIQUE = "unique";
     /**
+    * Validation rule that specifies a value must not already exist
+    */
+    public const RULE_EXISTS = "exists";
+    /**
     * Validation rule that prevents the use of special characters
     */
     public const RULE_NO_SPECIAL_CHARS = "no_special_chars";
@@ -109,6 +113,18 @@ abstract class Model {
                         $this->addErrorForRule($attribute, self::RULE_UNIQUE, ["field" => $this->getLabel($attribute)]);
                     }
                 }
+                if($ruleName === self::RULE_EXISTS){
+                    $className = $rule["class"];
+                    $uniqueAttr = $rule["attribute"] ?? $attribute;
+                    $tableName = $className::tableName();
+                    $statement = Application::$app->db->prepare("SELECT * FROM $tableName WHERE $uniqueAttr=:attr");
+                    $statement->bindValue(":attr", $value);
+                    $statement->execute();
+                    $record = $statement->fetchObject();
+                    if (!$record) {
+                        $this->addErrorForRule($attribute, self::RULE_EXISTS, ["field" => $this->getLabel($attribute)]);
+                    }
+                }
                 if($ruleName === self::RULE_PW_VALIDATE){
                     $className = $rule["class"];
                     $uniqueAttr = "id"; // Set $uniqueAttr to "id"
@@ -152,6 +168,7 @@ abstract class Model {
             self::RULE_MATCH    => "This field must be the same as {match}",
             self::RULE_NO_MATCH    => "This field must not be the same as {match}",
             self::RULE_UNIQUE   => "Record with this {field} already exists",
+            self::RULE_EXISTS => "This email does not exist",
             self::RULE_NO_SPECIAL_CHARS  => "No special characters are allowed",
             self::RULE_PW_VALIDATE => "Current password is incorrect",
         ];
