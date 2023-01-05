@@ -65,7 +65,7 @@ class AdminController extends Controller {
         if($request->isPost()) {
             $postModel->loadData($request->getBody());
             if($postModel->validate() && $postModel->savePost()) {
-                Application::$app->session->setFlash("success", "Your post has been saved, you can create a new post <a href='admin/new_post'>HERE</a> or you can view <a href='/dashboard/view_posts'>ALL POSTS</a>.");
+                Application::$app->session->setFlash("success", "Your post has been saved, you can create a new post <a href='/dashboard/new_post'>HERE</a> or you can view <a href='/dashboard/view_posts'>ALL POSTS</a>.");
                 Application::$app->response->redirect("/dashboard");      
             }
             // save the post

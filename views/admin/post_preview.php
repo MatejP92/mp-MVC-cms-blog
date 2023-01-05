@@ -3,6 +3,8 @@
 $this->title = " - Post"; 
 ?>
 
+<h1>Post Preview</h1>
+<hr>
 
 <?php foreach($post as $p): ?>
 

@@ -17,13 +17,14 @@
 
     <!-- Display posts from a logged in user -->
     <hr>
+
     <?php if(!empty($posts)): ?>
         <?php foreach($posts as $post): ?>
 
             <!-- POST TITLE GOES HERE -->
-        <h3>
+        <h2>
             <a href="/post?id=<?php echo $post->id ?>"><?php echo $post->title ?></a>
-        </h3>
+        </h2>
         <!-- POST AUTHOR GOES HERE -->
         <p class="lead">
             by <a href=""><?php echo $post->author ?></a>

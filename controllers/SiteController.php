@@ -28,8 +28,8 @@ class SiteController extends Controller {
             $posts = [];
         } else {
             $posts = Blog::findUserPublishedPosts(Application::$app->user->getDisplayName());
+            $posts[0]->content = htmlspecialchars_decode($posts[0]->content);
         }
-        $posts[0]->content = htmlspecialchars_decode($posts[0]->content);
         return $this->render("home", [
             "posts" => $posts
         ]);  // this replaces the Application::$app->router->renderView("home", $params); 

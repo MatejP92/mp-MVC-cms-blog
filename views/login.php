@@ -25,7 +25,7 @@ $this->title = " - Login";
                     <button type="submit" class="mx-auto btn btn-dark col-2" name="submit" id="submit">Login</button>
                 </div>
                 <div class="mx-auto form-floating mb-3 mt-3 col-4 text-center">
-                    <a href="forgotpassword">Forgot password?</a>
+                    <a href="forgot_password">Forgot password?</a>
                 </div>
             </form>
         </div>

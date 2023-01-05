@@ -1,11 +1,11 @@
 <?php
 
-use app\controller\ResetPasswordController;
 use app\core\Application;
 use app\controllers\SiteController;
 use app\controllers\UserController;
 use app\controllers\AdminController;
 use app\controllers\ProfileController;
+use app\controllers\ResetPasswordController;
 
 /**
 * The public/index.php file would be the entry point for the application. It would initialize 
@@ -71,9 +71,10 @@ $app->router->get("/dashboard/new_user", [AdminController::class, "newUser"]);
 $app->router->get("/dashboard/comments", [AdminController::class, "comments"]);
 
 
-$app->router->get("/forgotpassword", [UserController::class, "forgotPassword"]);
-$app->router->post("/forgotpassword", [UserController::class, "forgotPassword"]);
+$app->router->get("/forgot_password", [UserController::class, "forgotPassword"]);
+$app->router->post("/forgot_password", [UserController::class, "forgotPassword"]);
+$app->router->get("/reset_password", [UserController::class, "resetPassword"]);
+$app->router->post("/reset_password", [UserController::class, "resetPassword"]);
 
-$app->router->get("/resetpassword", [ResetPasswordController::class, "resetpassword"]);
 
 $app->run();

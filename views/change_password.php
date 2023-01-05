@@ -19,14 +19,14 @@ $this->title = " - Profile";
         </div><br>
         <div class="row">
             <div class="col">
-                <label for="newpassword">New Password:</label><br>
+                <label for="newPassword">New Password:</label><br>
                 <input type="password" id="newpassword" name="newpassword" class="form-control <?php echo $model->hasError("newpassword") ? "is-invalid" : "" ?>">
                 <div class="invalid-feedback">
                     <?php echo $model->getFirstError("newpassword") ?>
                 </div><br>
             </div>
             <div class="col">
-                <label for="repeatnewpassword">Repeat New Password:</label><br>
+                <label for="repeatNewPassword">Repeat New Password:</label><br>
                 <input type="password" id="repeatnewpassword" name="repeatnewpassword" class="form-control <?php echo $model->hasError("repeatnewpassword") ? "is-invalid" : "" ?>">
                 <div class="invalid-feedback">
                     <?php echo $model->getFirstError("repeatnewpassword") ?>
