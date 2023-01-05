@@ -10,6 +10,7 @@ use app\core\Request;
 use app\core\Response;
 use app\models\User;
 use app\models\LoginModel;
+use PHPMailer\PHPMailer\PHPMailer;
 
 /** 
 *  The UserController class would handle
@@ -77,8 +78,87 @@ class UserController extends Controller {
     }
 
 
-    public function forgotPassword(){
-        return $this->render("forgotpassword");
+    public function forgotPassword(Request $request){
+        $forgotPw = new User();
+        if($request->isPost()){
+            $forgotPw->loadData($request->getBody());
+            $token = bin2hex(random_bytes(32));
+            if($forgotPw->validate()){
+                $mail = new PHPMailer();
+                $mail->isSMTP();                                          //Send using SMTP
+                $mail->Host       = "smtp.mailtrap.io";                   //Set the SMTP server to send through
+                $mail->SMTPAuth   = true;                                 //Enable SMTP authentication
+                $mail->Username   = "ad9be87457d593";
+                $mail->Password   = "438dcbe7be48f5";
+                $mail->SMTPSecure = "tls";          //Enable implicit TLS encryption
+                $mail->Port       = 2525;                  //TCP port to connect to;
+                $mail->isHTML(true);
+                $mail->CharSet    = "UTF-8";
+                $mail->setFrom("reset_pw@test.com", "Reset Password");
+                $mail->addAddress($forgotPw->email);
+                $mail->Subject = "Reset Password";
+                $resetPasswordUrl = 'http://localhost:8080/reset_password?email=' . urlencode($forgotPw->email) . '&token=' . urlencode($token);
+                $mail->Body = "To reset your password, please visit the following URL: <a href='$resetPasswordUrl'>$resetPasswordUrl</a>";
+                if ($mail->send()) {
+                    // Email sent successfully
+                    if($forgotPw->forgotPassword($token, $forgotPw->email)){
+                        Application::$app->session->setFlash("success", "Link for reset password has been sent to your email address");
+                        Application::$app->response->redirect("/");
+                        return;
+                    }
+                } else {
+                    // An error occurred
+                    $errorMessage = $mail->ErrorInfo;
+                    Application::$app->session->setFlash("danger", "Sending email failed " . $errorMessage);
+                }
+            }
+
+        }
+        return $this->render("forgot_password", [
+            "model" => $forgotPw
+        ]);
     }
 
+
+    public function resetPassword(Request $request){
+        if($_GET["email"] && $_GET["token"] && Application::isGuest()){
+
+            $email = $_GET["email"];
+            $token = $_GET["token"];
+
+            $user = User::findUser(["email" => $email]);
+            if (empty($user)) {
+                throw new NotFoundException();
+            } else {
+                if($token === $user->token){
+                    $resetPw = new User();               
+                    if($request->isPost()){
+                        $resetPw->loadData($request->getBody());
+                        echo "<br><br><br><br>";
+                        echo "<pre>";
+                        var_dump($resetPw);
+                        echo "</pre>";
+                        
+                        if ($resetPw->validate() && $resetPw->resetPassword()) {
+                            echo "<br><br><br><br>";
+                            echo "<pre>";
+                            var_dump($resetPw);
+                            echo "</pre>";
+                            exit();
+                            Application::$app->session->setFlash("success", "Your password has been updated. You can now login.");
+                            Application::$app->response->redirect("/login");
+                        }
+                    }
+                }
+            }
+            return $this->render("reset_password", [
+                "user" => $user,
+                "email" => $email,
+                "token" => $token,
+                "model" => $resetPw,
+            ]);
+        } else {
+            throw new NotFoundException();
+        }
+    }
 }

@@ -174,7 +174,17 @@ abstract class DatabaseModel extends Model{
         $statement->bindValue(":id", $this->id);
         $statement->execute();
         return true;
-        }
+    }
+
+    public function forgotenPassword($token, $email) {
+        $tableName = $this->tableName();
+        //$expire = time() + 3600;
+        $statement = Application::$app->db->prepare("UPDATE $tableName SET token = :token WHERE email = :email");
+        $statement->bindValue(":email", $email);
+        $statement->bindValue(":token", $token);
+        $statement->execute();
+        return true; 
+    }
 
     
 
@@ -195,7 +205,7 @@ abstract class DatabaseModel extends Model{
         $statement->execute();
         $rows = $statement->fetchAll();
         foreach($rows as $row) {
-            $posts[] = new Blog($row["id"], $row["title"], $row["author"], substr($row["content"], 0, 200), $row["created"], $row["status"]);
+            $posts[] = new Blog($row["id"], $row["title"], $row["author"], htmlspecialchars_decode(substr($row["content"], 0, 200)), $row["created"], $row["status"]);
         }
         return $posts;
     }
@@ -213,7 +223,7 @@ abstract class DatabaseModel extends Model{
         $statement->execute();
         $rows = $statement->fetchAll();
         foreach($rows as $row) {
-            $posts[] = new Blog($row["id"], $row["title"], $row["author"], substr($row["content"], 0, 200), $row["created"], $row["status"]);
+            $posts[] = new Blog($row["id"], $row["title"], $row["author"], htmlspecialchars_decode(substr($row["content"], 0, 200)), $row["created"], $row["status"]);
         }
         return $posts;
     }
@@ -232,7 +242,7 @@ abstract class DatabaseModel extends Model{
         $statement->execute();
         $rows = $statement->fetchAll();
         foreach($rows as $row) {
-            $posts[] = new Blog($row["id"], $row["title"], $row["author"], substr($row["content"], 0, 200), $row["created"], $row["status"]);
+            $posts[] = new Blog($row["id"], $row["title"], $row["author"], htmlspecialchars_decode(substr($row["content"], 0, 200)), $row["created"], $row["status"]);
         }
         return $posts;
     }
@@ -252,7 +262,7 @@ abstract class DatabaseModel extends Model{
         $statement->execute();
         $rows = $statement->fetchAll();
         foreach($rows as $row) {
-            $posts[] = new Blog($row["id"], $row["title"], $row["author"], substr($row["content"], 0, 200), $row["created"], $row["status"]);
+            $posts[] = new Blog($row["id"], $row["title"], $row["author"], htmlspecialchars_decode(substr($row["content"], 0, 200)), $row["created"], $row["status"]);
         }
         return $posts;
     }
