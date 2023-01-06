@@ -98,7 +98,7 @@ class UserController extends Controller {
                 $mail->addAddress($forgotPw->email);
                 $mail->Subject = "Reset Password";
                 $resetPasswordUrl = 'http://localhost:8080/reset_password?email=' . urlencode($forgotPw->email) . '&token=' . urlencode($token);
-                $mail->Body = "To reset your password, please visit the following URL: <a href='$resetPasswordUrl'>$resetPasswordUrl</a>";
+                $mail->Body = "To reset your password, please visit the following URL: <a href='$resetPasswordUrl'>$resetPasswordUrl</a><br>This link is valid for 30 minutes";
                 if ($mail->send()) {
                     // Email sent successfully
                     if($forgotPw->forgotPassword($token, $forgotPw->email)){
@@ -122,29 +122,25 @@ class UserController extends Controller {
 
     public function resetPassword(Request $request){
         if($_GET["email"] && $_GET["token"] && Application::isGuest()){
-
             $email = $_GET["email"];
             $token = $_GET["token"];
-
             $user = User::findUser(["email" => $email]);
             if (empty($user)) {
                 throw new NotFoundException();
             } else {
                 if($token === $user->token){
+                    $now = time();
+                    $expire = strtotime($user->expire);
+                    if ($now > $expire) {
+                        Application::$app->session->setFlash("danger", "The reset password link has expired. Please try again.");
+                        Application::$app->response->redirect("/forgot_password");
+                        return;
+                    }
                     $resetPw = new User();               
                     if($request->isPost()){
                         $resetPw->loadData($request->getBody());
-                        echo "<br><br><br><br>";
-                        echo "<pre>";
-                        var_dump($resetPw);
-                        echo "</pre>";
                         
-                        if ($resetPw->validate() && $resetPw->resetPassword()) {
-                            echo "<br><br><br><br>";
-                            echo "<pre>";
-                            var_dump($resetPw);
-                            echo "</pre>";
-                            exit();
+                        if ($resetPw->validate() && $resetPw->resetPassword($user->email)) {
                             Application::$app->session->setFlash("success", "Your password has been updated. You can now login.");
                             Application::$app->response->redirect("/login");
                         }
@@ -152,7 +148,6 @@ class UserController extends Controller {
                 }
             }
             return $this->render("reset_password", [
-                "user" => $user,
                 "email" => $email,
                 "token" => $token,
                 "model" => $resetPw,

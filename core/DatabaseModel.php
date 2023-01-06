@@ -146,9 +146,10 @@ abstract class DatabaseModel extends Model{
 
     public function updatePassword($data){
         $tableName = $this->tableName();
-        $statement = Application::$app->db->prepare("UPDATE $tableName SET password = :password WHERE id = :id");
+        $statement = Application::$app->db->prepare("UPDATE $tableName SET password = :password WHERE id = :id OR email = :email");
         $statement->bindValue(":password", $data["password"]);
         $statement->bindValue(":id", $data["id"]);
+        $statement->bindValue(":email", $data["email"]);
         $statement->execute();
         return true;
     }    
@@ -178,10 +179,12 @@ abstract class DatabaseModel extends Model{
 
     public function forgotenPassword($token, $email) {
         $tableName = $this->tableName();
-        //$expire = time() + 3600;
-        $statement = Application::$app->db->prepare("UPDATE $tableName SET token = :token WHERE email = :email");
-        $statement->bindValue(":email", $email);
+        $expire = time() + 1800;
+        $expireDatetime = date('Y-m-d H:i:s', $expire);
+        $statement = Application::$app->db->prepare("UPDATE $tableName SET token = :token, expire = :expire WHERE email = :email");
         $statement->bindValue(":token", $token);
+        $statement->bindValue(":expire", $expireDatetime);
+        $statement->bindValue(":email", $email);
         $statement->execute();
         return true; 
     }

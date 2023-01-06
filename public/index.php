@@ -35,13 +35,6 @@ $app->router->get("/", [SiteController::class, "home"]);
 $app->router->get("/posts", [SiteController::class, "posts"]);
 $app->router->get("/post", [SiteController::class, "post"]);
 
-
-$app->router->get("/profile", [ProfileController::class, "profile"]);
-$app->router->get("/edit_profile", [ProfileController::class, "editProfile"]);
-$app->router->post("/edit_profile", [ProfileController::class, "editProfile"]);
-$app->router->get("/change_password", [ProfileController::class, "changePassword"]);
-$app->router->post("/change_password", [ProfileController::class, "changePassword"]);
-
 $app->router->get("/login", [UserController::class, "login"]);
 $app->router->post("/login", [UserController::class, "login"]);
 
@@ -50,6 +43,16 @@ $app->router->post("/register", [UserController::class, "register"]);
 
 $app->router->get("/logout", [UserController::class, "logout"]);
 
+$app->router->get("/forgot_password", [UserController::class, "forgotPassword"]);
+$app->router->post("/forgot_password", [UserController::class, "forgotPassword"]);
+$app->router->get("/reset_password", [UserController::class, "resetPassword"]);
+$app->router->post("/reset_password", [UserController::class, "resetPassword"]);
+
+$app->router->get("/profile", [ProfileController::class, "profile"]);
+$app->router->get("/edit_profile", [ProfileController::class, "editProfile"]);
+$app->router->post("/edit_profile", [ProfileController::class, "editProfile"]);
+$app->router->get("/change_password", [ProfileController::class, "changePassword"]);
+$app->router->post("/change_password", [ProfileController::class, "changePassword"]);
 
 $app->router->get("/dashboard", [AdminController::class, "admin"]);
 $app->router->get("/dashboard/view_posts", [AdminController::class, "viewPosts"]);
@@ -71,10 +74,6 @@ $app->router->get("/dashboard/new_user", [AdminController::class, "newUser"]);
 $app->router->get("/dashboard/comments", [AdminController::class, "comments"]);
 
 
-$app->router->get("/forgot_password", [UserController::class, "forgotPassword"]);
-$app->router->post("/forgot_password", [UserController::class, "forgotPassword"]);
-$app->router->get("/reset_password", [UserController::class, "resetPassword"]);
-$app->router->post("/reset_password", [UserController::class, "resetPassword"]);
 
 
 $app->run();
