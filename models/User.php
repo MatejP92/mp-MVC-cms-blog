@@ -57,6 +57,12 @@ class User extends DatabaseModel {
         $rules = [];
         if(Application::$app->request->getPath() === "/forgot_password"){
             $rules = ["email" => [self::RULE_REQUIRED, self::RULE_EMAIL, [self::RULE_EXISTS, "class" => self::class]]];
+        } elseif(Application::$app->request->getPath() === "/reset_password") {
+        
+            $rules = [
+                "password" => [self::RULE_REQUIRED, [self::RULE_MIN, "min" => 5]],
+                "repeatPassword" => [self::RULE_REQUIRED, [self::RULE_MATCH, "match" => "password"]],
+            ];
         } else {
             $rules = [
                 "username" => [self::RULE_REQUIRED, [self::RULE_UNIQUE, "class" => self::class], self::RULE_NO_SPECIAL_CHARS],
@@ -98,9 +104,9 @@ class User extends DatabaseModel {
         return parent::forgotenPassword($token, $email);
     }
 
-    public function resetPassword(){
+    public function resetPassword($email){
         $data = [
-            "id" => $this->id,
+            "email" => $email,
             "password" => $this->password
         ];
         $data["password"] = password_hash($this->password, PASSWORD_DEFAULT);
