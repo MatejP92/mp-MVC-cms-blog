@@ -31,6 +31,10 @@
     <div class="alert alert-success">
         <?php echo Application::$app->session->getFlash("success") ?>
     </div>
+    <?php elseif(Application::$app->session->getFlash("danger")): ?>
+    <div class="alert alert-danger">
+        <?php echo Application::$app->session->getFlash("danger") ?>
+    </div>
     <?php endif; ?>
     {{content}}
 </div>
