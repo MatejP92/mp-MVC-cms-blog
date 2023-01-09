@@ -17,7 +17,7 @@
 
     <!-- Display posts from a logged in user -->
     <hr>
-
+    
     <?php if(!empty($posts)): ?>
         <?php foreach($posts as $post): ?>
 

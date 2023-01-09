@@ -100,7 +100,10 @@ class AdminController extends Controller {
             // Show only the user's posts
             $posts = Blog::FindUserPosts(Application::$app->user->getDisplayName());
         }
-        $posts[0]->content = strip_tags(htmlspecialchars_decode($posts[0]->content), "<p>");
+        if (!empty($posts)) {
+            $posts[0]->content = strip_tags(htmlspecialchars_decode($posts[0]->content), "<p>");
+        }
+        
         $this->setLayout("admin");
         return $this->render("/view_posts", [
             "posts" => $posts
