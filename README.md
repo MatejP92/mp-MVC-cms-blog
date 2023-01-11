@@ -1,4 +1,4 @@
-MVC Blog CMS
+
 <hr>
 a Blog CMS made in MVC pattern
 <hr>
