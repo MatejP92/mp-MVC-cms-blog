@@ -83,7 +83,13 @@ class UserController extends Controller {
         if($request->isPost()){
             $forgotPw->loadData($request->getBody());
             $token = bin2hex(random_bytes(32));
+
             if($forgotPw->validate()){
+                // Get the url protocol and base url
+                $protocol = explode("/" ,$_SERVER["SERVER_PROTOCOL"]);
+                $url_protocol = strtolower($protocol[0]);
+                $baseUrl = $_SERVER["HTTP_HOST"];
+                
                 $mail = new PHPMailer();
                 $mail->isSMTP();                                          //Send using SMTP
                 $mail->Host       = "smtp.mailtrap.io";                   //Set the SMTP server to send through
@@ -97,8 +103,9 @@ class UserController extends Controller {
                 $mail->setFrom("reset_pw@test.com", "Reset Password");
                 $mail->addAddress($forgotPw->email);
                 $mail->Subject = "Reset Password";
-                $resetPasswordUrl = 'http://localhost:8080/reset_password?email=' . urlencode($forgotPw->email) . '&token=' . urlencode($token);
+                $resetPasswordUrl = $url_protocol . '://' . $baseUrl . '/reset_password?email=' . urlencode($forgotPw->email) . '&token=' . urlencode($token);
                 $mail->Body = "To reset your password, please visit the following URL: <a href='$resetPasswordUrl'>$resetPasswordUrl</a><br>This link is valid for 30 minutes";
+
                 if ($mail->send()) {
                     // Email sent successfully
                     if($forgotPw->forgotPassword($token, $forgotPw->email)){
