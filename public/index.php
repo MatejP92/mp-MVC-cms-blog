@@ -5,7 +5,6 @@ use app\controllers\SiteController;
 use app\controllers\UserController;
 use app\controllers\AdminController;
 use app\controllers\ProfileController;
-use app\controllers\ResetPasswordController;
 
 /**
 * The public/index.php file would be the entry point for the application. It would initialize 
