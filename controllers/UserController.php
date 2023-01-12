@@ -92,12 +92,12 @@ class UserController extends Controller {
                 
                 $mail = new PHPMailer();
                 $mail->isSMTP();                                          //Send using SMTP
-                $mail->Host       = "smtp.mailtrap.io";                   //Set the SMTP server to send through
+                $mail->Host       = "<your host>";                   //Set the SMTP server to send through
                 $mail->SMTPAuth   = true;                                 //Enable SMTP authentication
-                $mail->Username   = "ad9be87457d593";
-                $mail->Password   = "438dcbe7be48f5";
+                $mail->Username   = "<your username>";
+                $mail->Password   = "<your password>";
                 $mail->SMTPSecure = "tls";          //Enable implicit TLS encryption
-                $mail->Port       = 2525;                  //TCP port to connect to;
+                $mail->Port       = <your port>;                  //TCP port to connect to;
                 $mail->isHTML(true);
                 $mail->CharSet    = "UTF-8";
                 $mail->setFrom("reset_pw@test.com", "Reset Password");
