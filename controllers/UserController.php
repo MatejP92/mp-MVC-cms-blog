@@ -96,6 +96,7 @@ class UserController extends Controller {
                 $dotenv->load();
 
                 $mail = new PHPMailer();
+<<<<<<< HEAD
                 $mail->isSMTP();                                //Send using SMTP
                 $mail->Host       = $_ENV["SMTP_HOST"];         //Set the SMTP server to send through
                 $mail->SMTPAuth   = true;                       //Enable SMTP authentication
@@ -104,6 +105,15 @@ class UserController extends Controller {
                 $mail->Port       = $_ENV["SMTP_PORT"];         //TCP port to connect to;
                 $mail->SMTPSecure = "tls";                      //Enable implicit TLS encryption
        
+=======
+                $mail->isSMTP();                                          //Send using SMTP
+                $mail->Host       = "<your host>";                   //Set the SMTP server to send through
+                $mail->SMTPAuth   = true;                                 //Enable SMTP authentication
+                $mail->Username   = "<your username>";
+                $mail->Password   = "<your password>";
+                $mail->SMTPSecure = "tls";          //Enable implicit TLS encryption
+                $mail->Port       = <your port>;                  //TCP port to connect to;
+>>>>>>> 4dd8f8d8a915ede755b00d6c348528a85c1fdfc2
                 $mail->isHTML(true);
                 $mail->CharSet    = "UTF-8";
                 $mail->setFrom("reset_pw@test.com", "Reset Password");
