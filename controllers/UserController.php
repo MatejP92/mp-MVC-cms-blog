@@ -10,6 +10,7 @@ use app\core\Request;
 use app\core\Response;
 use app\models\User;
 use app\models\LoginModel;
+use Dotenv\Dotenv;
 use PHPMailer\PHPMailer\PHPMailer;
 
 /** 
@@ -39,6 +40,7 @@ class UserController extends Controller {
 
     public function __construct() {
         $this->registerMiddleware(new AuthMiddleware(["profile"]));
+
     }
 
     public function login(Request $request, Response $response){
@@ -89,15 +91,19 @@ class UserController extends Controller {
                 $protocol = explode("/" ,$_SERVER["SERVER_PROTOCOL"]);
                 $url_protocol = strtolower($protocol[0]);
                 $baseUrl = $_SERVER["HTTP_HOST"];
-                
+
+                $dotenv = Dotenv::createImmutable(dirname(__DIR__));
+                $dotenv->load();
+
                 $mail = new PHPMailer();
-                $mail->isSMTP();                                          //Send using SMTP
-                $mail->Host       = "smtp.mailtrap.io";                   //Set the SMTP server to send through
-                $mail->SMTPAuth   = true;                                 //Enable SMTP authentication
-                $mail->Username   = "ad9be87457d593";
-                $mail->Password   = "438dcbe7be48f5";
-                $mail->SMTPSecure = "tls";          //Enable implicit TLS encryption
-                $mail->Port       = 2525;                  //TCP port to connect to;
+                $mail->isSMTP();                                //Send using SMTP
+                $mail->Host       = $_ENV["SMTP_HOST"];         //Set the SMTP server to send through
+                $mail->SMTPAuth   = true;                       //Enable SMTP authentication
+                $mail->Username   = $_ENV["SMTP_USER"];
+                $mail->Password   = $_ENV["SMTP_PASSWORD"];
+                $mail->Port       = $_ENV["SMTP_PORT"];         //TCP port to connect to;
+                $mail->SMTPSecure = "tls";                      //Enable implicit TLS encryption
+       
                 $mail->isHTML(true);
                 $mail->CharSet    = "UTF-8";
                 $mail->setFrom("reset_pw@test.com", "Reset Password");
@@ -119,7 +125,6 @@ class UserController extends Controller {
                     Application::$app->session->setFlash("danger", "Sending email failed " . $errorMessage);
                 }
             }
-
         }
         return $this->render("forgot_password", [
             "model" => $forgotPw
